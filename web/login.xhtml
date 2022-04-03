@@ -1,0 +1,112 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    
+     
+     
+    <h:head>
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+        <!-- Bootstrap 3.3.5 -->
+         <h:outputStylesheet library="bootstrap" name="css/bootstrap.min.css"/>
+        <h:outputStylesheet library="css" name="font-awesome.min.css"/>
+        <h:outputStylesheet library="css" name="ionicons.min.css"/>
+        <h:outputStylesheet library="dist" name="css/AdminLTE.min.css"/>
+        
+        
+        <h:outputStylesheet library="plugins" name="iCheck/square/blue.css"/>
+        <style type="text/css">
+            div[id="growlLogin_container"] {
+                top: 60px;
+                z-index:1001; 
+            }
+            div[id="growlLogin_container"] {
+                position:absolute;
+                top:60px;
+                z-index:1001;
+            }
+        </style>
+        
+        
+        
+    </h:head>
+
+    <h:body  style=" background-image: url('resources/dist/img/fondo_login2.png'); " class="login-form-1" > <!--class="login-form-1" >-->
+        
+        <h:form>
+             <p:growl id="growl" showDetail="true" />
+<!--         <p:messages globalOnly="false" showDetail="true" />-->
+          <div class="login-box">
+                <div class="login-logo">
+                    <!--<h2>Capacitate en Transporte</h2>-->
+                     <h3></h3>
+               </div> <!-- /.login-logo -->
+                <div class="login-box-body">
+                    <p  class="login-box-msg">INICIO SESIÓN</p>
+
+                    <div  class="form-group has-feedback">
+                        <p:inputText id="txtUserName" placeholder="Usuario" styleClass="form-control" label="User name" value="#{loginUsrMb.usuario}" ><!--required="true"-->
+                            <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+                        </p:inputText>
+                    
+                    </div>
+                    <div class="form-group has-feedback">
+                        <p:password id="txtPassword" placeholder="Contraseña" styleClass="form-control" label="Password" value="#{loginUsrMb.clave}" ><!--required="true"-->
+                            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                        </p:password>
+                       
+                    </div>
+<!--                    <div class="form-group">
+                        <p:captcha id="captcha" label="captcha" requiredMessage="Captcha is required"/>
+                        <p:captcha label="Captcha" tabindex="3" theme="clean" language="es" requiredMessage="Ingrese el valor que se muestra en la imagen" validatorMessage="El valor de la imagen incorrecto" />
+                    </div>-->
+
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p:commandButton id="btnLogin" action="#{loginUsrMb.AutenticarUsr}" value="Ingresar" styleClass="btn btn-lg btn-block btn-flat" update="growl"></p:commandButton><!-- btn-primary -->
+                        </div> <!--/.col-->
+                    </div>
+
+<!--                    <div class="row">
+                        <div class="col-xs-12">
+
+                        </div>
+                    </div>-->
+                    <br/>   
+                  
+                       
+                    <!--<h:commandLink action="{loginUsrMb.goOlvidePass()}" value="Olvidó Contraseña" style="font-size:13px;text-align:right"/>-->
+                    
+                   <h:panelGrid width="100%" columns = "2" border = "0" cellpadding = "20" cellspacing = "20">
+
+                        <!--<h:commandLink action="{loginUsrMb.goRegistro()}" value="Registrar" style="font-size:12px;text-align:left"/>-->
+
+                        <h:commandLink action="#{loginUsrMb.goOlvidePass()}" value="Olvidó Contraseña" style="font-size:12px;text-align:right"/>
+
+                    </h:panelGrid>
+                
+                </div> 
+            </div> 
+        </h:form>
+        <h:outputScript library="bootstrap" name="js/bootstrap.min.js"/>
+        <h:outputScript library="plugins" name="iCheck/icheck.min.js"/>
+        <h:outputScript name="jquery/jquery.js" library="primefaces" />
+       
+        <script>
+            $(function () {
+                $('input').iCheck({
+                    checkboxClass: 'icheckbox_square-blue',
+                    radioClass: 'iradio_square-blue',
+                    increaseArea: '20%' // optional
+                });
+            });
+        </script>
+
+    </h:body>
+
+</ui:composition>

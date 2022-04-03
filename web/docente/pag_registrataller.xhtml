@@ -1,0 +1,148 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">ASIGNACIÓN DE ACTIVIDADES</ui:define> 
+   
+    <ui:define name="content">
+        
+    <h:form id="formTaller">
+
+        <p:panel header="ASIGNA ACTIVIDADES" >
+
+                <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+
+                <p:layout  style="min-width:400px;min-height:150px;">
+                   <p:layoutUnit position="west" resizable="true" size="700" minSize="700" maxSize="1000">
+                       <p:panelGrid style="width:100%">
+
+                           <p:row>
+                              <p:column style="width:20%">
+                                <p:outputLabel value="ACTIVIDAD (*) :"/>
+                              </p:column>
+                              <p:column style="width:50%">
+                                <p:inputText id="nombre"  
+                                             value="#{tallerMB.taller_nombre}"
+                                         size="60" maxlength="100"
+                                         autocomplete="off">
+                                </p:inputText>
+                              </p:column>
+                           </p:row> 
+
+  
+                           
+                           
+                        <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="DESTREZA (*) :"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                            <p:selectOneMenu id="destreza" value="#{tallerMB.destreza_id}" >     
+                                <f:selectItem itemLabel="Escoja una Destreza" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{tallerMB.destrezaList}" var="destreza" itemLabel="#{destreza.destrezaNombre}" itemValue="#{destreza.destrezaId}" />
+                            </p:selectOneMenu>
+                          </p:column>
+                       </p:row> 
+                           
+                        <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="CURSO - UNIDAD (*) :"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                            <p:selectOneMenu id="unidad" value="#{tallerMB.unidad_id}" >
+                                <f:selectItem itemLabel="Escoja una Unidad" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{tallerMB.unidadList}" var="unidad" itemLabel="#{unidad.curso_nombre} #{unidad.paralelo_nombre} : #{unidad.nombres}" itemValue="#{unidad.unidad_id}" />
+                            </p:selectOneMenu>
+                          </p:column>
+                        </p:row> 
+                           
+                       </p:panelGrid>
+
+
+                   </p:layoutUnit>
+
+                   <p:layoutUnit position="center" resizable="true" size="200" minSize="100" maxSize="200" >
+
+                       <h:panelGrid id="botones" columns="1" >
+                          <br/> 
+                          <p:commandButton value="CONSULTAR" icon="ui-icon-check"  update="tallerDT" actionListener="#{tallerMB.buscaTallerRegistrado()}" validateClient="true"/>    
+                          <br/>    
+                          <p:commandButton value="GUARDAR" icon="ui-icon-disk"  actionListener="#{tallerMB.ingresaTaller()}" update="formTaller,growl,tallerDT" validateClient="true"/>
+                          <br/>
+                           <p:commandButton value="NUEVO" icon="ui-icon-refresh" actionListener="#{tallerMB.reestableceTaller()}" update="formTaller,growl" validateClient="true" />
+                       </h:panelGrid>
+
+                   </p:layoutUnit>
+               </p:layout>
+
+
+            </p:panel>    
+        
+        <p:panel header="DETALLE DE ACTIVIDADES ASIGNADAS">
+            <p:dataTable 
+                id="tallerDT" 
+                value="#{tallerMB.tallerList}" 
+                var="tallerL" 
+                emptyMessage="No existen Actividades asignadas"
+                paginator="true" rows="5" rowsPerPageTemplate="10,20,30,40" 
+                style="width:100%;" 
+                editable="true" 
+                filteredValue="">
+             
+                <p:column headerText="Cerrar Taller" style="text-align:center;">
+                    <p:row rendered="#{'Activo' eq tallerL.estado}">
+                    <p:commandButton process="tallerDT" icon="ui-icon-folder-open" actionListener="#{tallerMB.cerrarTaller(tallerL)}" >
+                        <p:confirm header="Confirmación" message="Está seguro de cerrar el Taller?" icon="ui-icon-alert" />
+                    </p:commandButton>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>
+                    </p:row>
+                </p:column>
+                
+             <!--    <p:column headerText="Id" style="text-align: center; ">
+                    <h:outputText value="#{tallerL.taller_id} " />
+                </p:column> -->
+                
+                <p:column headerText="Destreza" style="text-align: center; ">
+                    <h:outputText value="#{tallerL.destreza} " />
+                </p:column>
+                
+                <p:column headerText="Unidad" style="text-align: center; ">
+                    <h:outputText value="#{tallerL.unidad} " />
+                </p:column>
+                
+                 <p:column headerText="Actividad" style="text-align: center; ">
+                     <h:outputText value="#{tallerL.taller_nombre} " />
+                </p:column>
+                
+                <!--<p:column headerText="Descripción" style="text-align: center;">
+                    <h:outputText value="{tallerL.taller_descripcion}"  />
+                </p:column>-->
+                
+                <p:column headerText="Curso" style="text-align: center; ">
+                    <h:outputText value="#{tallerL.curso_nombre}" />
+                </p:column>
+                
+                <p:column headerText="Paralelo" style="text-align: center; ">
+                    <h:outputText value="#{tallerL.paralelo_nombre}" />
+                </p:column>
+                
+                <p:column headerText="Estado" style="text-align: center; ">
+                    <h:outputText value="#{tallerL.estado}" />
+                </p:column>
+            </p:dataTable>
+        </p:panel>
+        
+    </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>

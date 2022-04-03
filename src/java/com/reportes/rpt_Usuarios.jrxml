@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5449eb51-fd92-43c0-9a00-d1d9347ac5ee">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="167"/>
+	<property name="ireport.y" value="41"/>
+	<parameter name="ruta_img" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{ruta_img}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="usuario" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{usuario}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fchIni" class="java.util.Date">
+		<defaultValueExpression><![CDATA[$P{fchIni}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fchFin" class="java.util.Date">
+		<defaultValueExpression><![CDATA[$P{fchFin}]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select p.Persona_Ced Cedula , CONCAT(p.Persona_Ape , ' ' , p.Persona_Nom) Nombres   ,  
+		 pr.Provincia_Nom Provincia , c.Ciudad_Nom Ciudad  , p.Persona_Domic Direccion , 
+		 p.Persona_tlf Telefono , ro.ROL ROL , es.Especialidad Especialidad
+                from 	tbl_usuarios u
+                        inner join tbl_persona p	 	on p.Usuario_Cod 	= u.ID
+                        inner join tbl_ciudad c		 	on c.Ciudad_Cod         = p.Ciudad_Id
+                        inner join tbl_provincia pr 		on pr.Provincia_Cod 	= c.Provincia_Id
+                        left join tbl_usuarios_roles ur 	on ur.ID_USUARIO    	= u.ID
+                        left join tbl_rol ro			on ro.ID 		= ur.ID_ROL
+                        inner join tbl_especialidad es          on es.Especialidad_Cod  = p.Especialidad_Id
+                where u.ESTADO = 'A'
+                and ( u.fecha_insercion between $P{fchIni} and $P{fchFin} )
+;]]>
+	</queryString>
+	<field name="Cedula" class="java.lang.String"/>
+	<field name="Nombres" class="java.lang.String"/>
+	<field name="Provincia" class="java.lang.String"/>
+	<field name="Ciudad" class="java.lang.String"/>
+	<field name="Direccion" class="java.lang.String"/>
+	<field name="Telefono" class="java.lang.String"/>
+	<field name="ROL" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Especialidad" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<group name="Cedula">
+		<groupExpression><![CDATA[$F{Cedula}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="674" y="38" width="57" height="20" forecolor="#000066" uuid="97732c60-2ed3-40a8-af09-cb8d20d4174a"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[F/Emisión:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="697" y="11" width="63" height="20" forecolor="#000066" uuid="47b65bc2-b907-4a4b-b847-026bcc1c4278"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="736" y="38" width="75" height="20" uuid="9c653e5c-bac0-4c1e-8dd4-692fea4bdfa0"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="270" y="39" width="263" height="25" forecolor="#000066" uuid="e86d0797-9568-4e2d-ae95-143f127bc146"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DETALLE DE USUARIOS]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="757" y="11" width="40" height="20" forecolor="#000066" uuid="a529ff30-f4f0-4512-9602-87d63d5cd1b9"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="15" y="11" width="118" height="47" uuid="13659574-e6b1-4ce6-86a3-b43ebcbe80b1"/>
+				<imageExpression><![CDATA[$P{ruta_img}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="15" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<rectangle>
+				<reportElement x="10" y="24" width="792" height="20" forecolor="#000066" backcolor="#003333" uuid="3a46ce7e-7228-40be-91c3-c3669781c1f1"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="21" y="24" width="84" height="20" forecolor="#FFFFFF" uuid="e4ab011e-5650-4aac-9d10-0eef247e4e19"/>
+				<text><![CDATA[Cédula]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="89" y="24" width="124" height="20" forecolor="#FFFFFF" uuid="aec53e58-1d9f-40e6-81bb-9d0956da44eb"/>
+				<text><![CDATA[Nombres]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="25" width="91" height="20" forecolor="#FFFFFF" uuid="a020fade-caa6-4c47-bceb-6527489958a8"/>
+				<text><![CDATA[Provincia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="312" y="25" width="91" height="20" forecolor="#FFFFFF" uuid="58428095-3cb1-401b-96b4-a894a13fb01a"/>
+				<text><![CDATA[Ciudad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="417" y="24" width="115" height="20" forecolor="#FFFFFF" uuid="e2ed1456-bf63-4136-ab7b-1e725d112a7c"/>
+				<text><![CDATA[Dirección]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="533" y="24" width="77" height="20" forecolor="#FFFFFF" uuid="4560eac6-8b61-4ff3-b9a6-15b6bb6580d0"/>
+				<text><![CDATA[Teléfono]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="610" y="24" width="77" height="20" forecolor="#FFFFFF" uuid="37476ea8-e899-4ece-aea7-e920d174ff18"/>
+				<text><![CDATA[Rol]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="704" y="25" width="77" height="20" forecolor="#FFFFFF" uuid="269b9593-feed-4e9c-a942-08a4538bf656"/>
+				<text><![CDATA[Especialidad]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="16" y="2" width="65" height="20" uuid="d3ee3146-9252-4e52-9085-46ee5d30c19b"/>
+				<textFieldExpression><![CDATA[$F{Cedula}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="89" y="2" width="125" height="20" uuid="20b6fbe2-9fd1-42eb-99e2-4946b89e0660"/>
+				<textFieldExpression><![CDATA[$F{Nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="2" width="92" height="20" uuid="9c2c54b7-5109-4aca-9da3-f5c3b78eef87"/>
+				<textFieldExpression><![CDATA[$F{Provincia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="312" y="2" width="97" height="20" uuid="39e4ee10-bd0a-4d9b-aaf3-bffccf2d201f"/>
+				<textFieldExpression><![CDATA[$F{Ciudad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="417" y="2" width="112" height="20" uuid="b503e5ea-31e5-4330-a7d5-777e9fd9ae8e"/>
+				<textFieldExpression><![CDATA[$F{Direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="533" y="2" width="75" height="20" uuid="b371648c-df4e-41eb-9977-d21045c98515"/>
+				<textFieldExpression><![CDATA[$F{Telefono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="612" y="2" width="89" height="20" uuid="de2c112c-72ee-40e8-be2f-cab9608353f3"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ROL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="704" y="2" width="100" height="20" uuid="07f648ac-cc9d-4447-9d10-0a3e18058fd1"/>
+				<textFieldExpression><![CDATA[$F{Especialidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="31" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<line>
+				<reportElement mode="Transparent" x="14" y="20" width="784" height="1" forecolor="#000066" backcolor="#003333" uuid="73a3f837-7d18-4020-9f58-f701e1ea36a0"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="643" y="30" width="48" height="20" forecolor="#003333" uuid="ebedab1e-8fa9-4fea-aefd-7dd8983a3ed6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Informe :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="696" y="30" width="100" height="20" uuid="8bf6f298-6f28-4406-850a-06c4c778bf1f"/>
+				<text><![CDATA[rpt_Usuarios]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="103" y="30" width="100" height="20" uuid="b21ba40d-6e30-4f19-a411-3bf022f4162f"/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="30" width="83" height="20" forecolor="#003333" uuid="278c237b-2dcc-4470-9b85-34bdfe8b3157"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Elaborado Por:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

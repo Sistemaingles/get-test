@@ -1,0 +1,154 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">REPORTE ESTUDIANTES POR DOCENTE</ui:define> 
+   
+    <ui:define name="content">
+        
+    <h:form id="formTaller">
+
+        <p:panel header="REPORTE ESTUDIANTES POR DOCENTE" >
+
+                <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+
+                <p:layout  style="min-width:400px;min-height:150px;">
+                   <p:layoutUnit position="west" resizable="true" size="700" minSize="700" maxSize="1000">
+                       <p:panelGrid style="width:100%">
+                           
+                          <p:row>
+                            <p:column style="width:20%">
+                                <p:outputLabel value="PERIODO:"/>
+                            </p:column>
+                              <p:column style="width:30%">
+                                <p:selectOneMenu id="periodo" value="#{reporteEstudianteDocenteMB.periodo_cod}"  >     
+                                    <f:selectItem itemLabel="(TODOS)" itemValue="0" />
+                                    <f:selectItems value="#{reporteEstudianteDocenteMB.periodoList}" var="periodo" itemLabel="#{periodo.periodoAnio}" itemValue="#{periodo.periodoId}" />
+                                </p:selectOneMenu>
+                                <p:message for="periodo" />
+                              </p:column>
+                        
+                            <p:column style="width:20%">
+                                <p:outputLabel value="CURSO:"/>
+                            </p:column>
+                              <p:column style="width:30%">
+                                <p:selectOneMenu id="curso" value="#{reporteEstudianteDocenteMB.curso_cod}" >     
+                                    <f:selectItem itemLabel="(TODOS)" itemValue="0" />
+                                    <f:selectItems value="#{reporteEstudianteDocenteMB.cursoList}" var="curso" itemLabel="#{curso.cursoNumero}" itemValue="#{curso.cursoId}" />
+                                </p:selectOneMenu>
+                                <p:message for="curso" />
+                              </p:column>
+                        </p:row>         
+
+                        <p:row>
+                            <p:column style="width:20%">
+                                <p:outputLabel value="DOCENTE:"/>
+                            </p:column>
+                              <p:column style="width:30%">
+                                  <p:selectOneMenu id="docente" value="#{reporteEstudianteDocenteMB.docente_cod}" >     
+                                    <f:selectItem itemLabel="(TODOS)" itemValue="0" />
+                                    <f:selectItems value="#{reporteEstudianteDocenteMB.docenteList}" var="docente" itemLabel="#{docente.docenteApellidos} #{docente.docenteNombres}" itemValue="#{docente.docenteId}" />
+                                </p:selectOneMenu>
+                                <p:message for="docente" />
+                              </p:column>
+                          
+                            <p:column style="width:10%">
+                                <p:outputLabel value="PARALELO:"/>
+                            </p:column>
+                              <p:column style="width:30%">
+                                <p:selectOneMenu id="paralelo" value="#{reporteEstudianteDocenteMB.paralelo_cod}" >     
+                                    <f:selectItem itemLabel="(TODOS)" itemValue="0"/>
+                                    <f:selectItems value="#{reporteEstudianteDocenteMB.paraleloList}" var="paralelo" itemLabel="#{paralelo.paraleloNum}" itemValue="#{paralelo.paraleloId}" />
+                                </p:selectOneMenu>
+                                <p:message for="paralelo" />
+                              </p:column>
+                        
+                            
+                        </p:row>  
+                           
+                       </p:panelGrid>
+
+
+                   </p:layoutUnit>
+
+                   <p:layoutUnit position="center" resizable="true" size="200" minSize="100" maxSize="200" >
+
+                       <h:panelGrid id="botones" columns="1" >
+                          <br/> 
+                          <p:commandButton value="BUSCAR" icon="ui-icon-check"  update="estudDocentDT" actionListener="#{reporteEstudianteDocenteMB.buscaEstudiantesxDocente()}" validateClient="true"/>    
+                          <br/> 
+                             
+                          <p:commandButton id="btn_imprimir" value = "IMPRIMIR"   actionListener="#{reporteEstudianteDocenteMB.generarReporte()}"  icon="ui-icon-print" ajax="false" />
+                          <br/> 
+                       </h:panelGrid>
+
+                   </p:layoutUnit>
+               </p:layout>
+
+
+            </p:panel>    
+        
+        
+        
+        <p:panel header="">
+            <p:layout  style="min-width:400px;min-height:350px;">
+                
+                <p:layoutUnit position="west" resizable="false" size="700" minSize="700" maxSize="1000">
+                    <p:dataTable 
+                        id="estudDocentDT" 
+                        value="#{reporteEstudianteDocenteMB.estudiantexDocenteList}" 
+                        var="resultado" 
+                        emptyMessage="No existen estudiante registrados según docente seleccionado."
+                        paginator="true" rows="5" rowsPerPageTemplate="10,20,30,40" 
+                        style="width:100%;" 
+                        editable="true" 
+                        filteredValue="">
+
+
+                        <p:column headerText="Periodo" style="width:100px;text-align:center;">
+                            <h:outputText value="#{resultado.periodo} " />
+                        </p:column>
+
+                        <p:column headerText="Estado" style="width:70px;text-align:center;">
+                            <h:outputText value="#{resultado.estado} " />
+                        </p:column>
+
+                        <p:column headerText="Curso" style="width:100px;text-align:center;">
+                            <h:outputText value="#{resultado.curso_nombre} " />
+                        </p:column>
+                        <p:column headerText="Paralelo" style="width:100px;text-align:center;">
+                            <h:outputText value="#{resultado.paralelo_nombre} " />
+                        </p:column>
+
+                        <p:column headerText="Docente" style="width:200px;text-align:center;">
+                            <h:outputText value="#{resultado.nombres}" />
+                        </p:column>
+
+                        <p:column headerText="Cantidad Estudiantes" style="width:100px;text-align:center;">
+                            <h:outputText value="#{resultado.cant_estudiante}" />
+                        </p:column>
+
+                    </p:dataTable>
+
+                </p:layoutUnit>
+                
+                <p:layoutUnit position="center" resizable="false" size="200" minSize="100" maxSize="200" >
+                    <p:panelGrid  columns="2" rendered="#{not empty reporteEstudianteDocenteMB.url}" columnClasses="label,value">
+                        <p:media  value="#{verArchivosMB.reporte}" style="min-width:1000px;min-height:300px;"  width="350" height="650" cache="false" player="pdf" >
+                        </p:media>
+                    </p:panelGrid>
+                </p:layoutUnit>
+         
+            </p:layout>          
+        </p:panel>
+        
+    </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>

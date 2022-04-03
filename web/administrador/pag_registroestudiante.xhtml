@@ -1,0 +1,224 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">ESTUDIANTES</ui:define> 
+   
+    <ui:define name="content">
+        
+        <h:form id="Formulario2">
+         
+            <p:panel header="Registro Estudiante" >
+            
+            <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+            
+            <p:layout style="min-width:400px;min-height:250px;">
+               <p:layoutUnit position="west" resizable="true" size="600" minSize="400" maxSize="600">
+                   <p:panelGrid style="width:100%">
+                       <p:row>
+                          <p:column style="width:10%">
+                            <p:outputLabel value="CEDULA:"/>
+                          </p:column>
+                          <p:column style="width:30%">
+                            <p:inputText id="cedula" placeholder="Ingrese Cédula" 
+                                     validatorMessage="Es obligatorio llenar campo Cédula"
+                                     value="#{estudianteMB.identidad}"
+                                     size="40" maxlength="10"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     autocomplete="off">
+             
+                                <p:keyFilter regEx="/[0-9]/i"/>
+                            </p:inputText>
+                            <p:message for="cedula" display="icon"/>
+                              <!--<p:inputMask id="identificacion" value="{estudianteMB.identidad}" mask="9999999999" placeholder="Ingrese su Cédula" size="40"/>-->
+                          </p:column>
+                       </p:row>
+                       
+                       <p:row>
+                          <p:column style="width:10%">
+                            <p:outputLabel value="NOMBRES:"/>
+                          </p:column>
+                          <p:column style="width:30%">
+                            <p:inputText id="Nombre" placeholder="Ingrese sus Nombres" 
+                                     validatorMessage="Es obligatorio llenar campo Nombres"
+                                     value="#{estudianteMB.nombres}"
+                                     size="40" maxlength="100"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     autocomplete="off">
+                                <p:keyFilter regEx="/[a-z_ñ\s]/i" />
+                            </p:inputText>
+                          </p:column>
+                       </p:row> 
+                       
+                        <p:row>
+                          <p:column style="width:10%">
+                            <p:outputLabel value="APELLIDOS:"/>
+                          </p:column>
+                          <p:column style="width:30%">
+                            <p:inputText id="apellido" placeholder="Ingrese sus Apellidos" 
+                                     validatorMessage="Es obligatorio llenar campo Apellidos"
+                                     value="#{estudianteMB.apellidos}"
+                                     size="40" maxlength="100"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     autocomplete="off">
+                                <p:keyFilter regEx="/[a-z_ñ\s]/i" />
+                            </p:inputText>
+                          </p:column>
+                       </p:row> 
+                       
+                       <p:row>
+                          <p:column style="width:10%">
+                            <p:outputLabel value="GENERO:"/>
+                          </p:column>
+                          <p:column style="width:30%">
+                              <p:selectOneMenu id="genero" value="#{estudianteMB.genero}" >
+                                <f:selectItem itemLabel="Seleccione una opción" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItem itemLabel="Masculino" itemValue="M" />
+                                <f:selectItem itemLabel="Femenino" itemValue="F" />     
+                            </p:selectOneMenu>
+                          </p:column>
+                       </p:row> 
+                       
+                   </p:panelGrid>
+                 
+                   
+               </p:layoutUnit>
+
+               <p:layoutUnit position="center" resizable="true" size="200" minSize="100" maxSize="200" >
+                   
+                   <h:panelGrid id="botones" columns="1" >
+                   
+                      <br/> 
+                      <!--<p:commandButton value="CONSULTAR" icon="ui-icon-check"  update="docenteDT" actionListener="{cursoParaleloMB.buscaCursosParalelosAsignados()}" validateClient="true"/>    
+                      <br/> -->   
+                      <p:commandButton value="NUEVO" icon="ui-icon-refresh" actionListener="#{estudianteMB.resstableEstudiante()}" update="Formulario2,growl" validateClient="true" />
+                      <br/>
+                      <p:commandButton value="GUARDAR" icon="ui-icon-disk"  update="Formulario2,growl" actionListener="#{estudianteMB.ingresaEstudiante()}" validateClient="true"/>
+                      
+                      
+                   </h:panelGrid>
+                   
+               </p:layoutUnit>
+           </p:layout>
+        </p:panel>    
+       
+        <p:panel header="DETALLE DE ESTUDIANTES">
+            <p:dataTable 
+                id="estudianteDT" 
+                value="#{estudianteMB.estudianteList}" 
+                var="estudianteL" 
+                emptyMessage="No existen Estudiantes registrados"
+                paginator="true" rows="10" rowsPerPageTemplate="10,20,30,40" 
+                style="width:100%;" 
+                editable="true" 
+                widgetVar="estudianteTable"
+                >
+                
+                <p:ajax event="rowEdit" listener="#{estudianteMB.actualizar}" update=":Formulario2:growl"/>
+                <p:ajax event="rowEditCancel" listener="#{estudianteMB.cancelar()}" update=":Formulario2:growl"/>
+                
+                <p:column headerText="Editar" style="width:70px;text-align:center;">
+                    <p:rowEditor/>
+                </p:column>
+                
+                <!--<p:column headerText="Eliminar" style="width:70px;text-align:center;">
+                    <p:commandButton process="estudianteL" icon="ui-icon-trash" actionListener="{periodoMB.eliminar(docenteL)}" update=":Formulario2:docenteDT">
+                        <p:confirm header="Confirmación" message="Está seguro de eliminar el Estudiante?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                    <p:confirmDialog  id="editDlg" global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"  />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>  
+                </p:column>-->
+                
+                <f:facet name="header">
+                    <p:outputPanel>
+                        <h:outputText value="Busqueda en campos filtrados:  " />
+                        <p:inputText id="globalFilter" onkeyup="PF('estudianteTable').filter()" style="width:150px" placeholder="Ingrese palabra"/>
+                    </p:outputPanel>
+                </f:facet>
+                
+   <!--             <p:column headerText="Id" style="text-align: center; width: 80px">
+                    <h:outputText value="#{estudianteL.estudianteId}" />
+                </p:column>  -->
+  
+                <p:column headerText="Cédula" style="text-align: center; width: 100px"
+                          filterBy="#{estudianteL.estudianteIdent}" filterMatchMode="contains">
+                    <h:outputText value="#{estudianteL.estudianteIdent}" />
+                </p:column>
+                
+                <p:column headerText="Nombres" style="text-align: center; width:120px"
+                          filterBy="#{estudianteL.estudianteNom}" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{estudianteL.estudianteNom}"/></f:facet>
+                        <f:facet name="input">
+                            <p:inputText id="nombres" placeholder="Ingrese sus Nombres" 
+                                     validatorMessage="Nombres: Ingresar solo Caracteres"
+                                     value="#{estudianteL.estudianteNom}"
+                                     size="40" maxlength="100"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase; color: black"
+                                     required="true"
+                                     requiredMessage="Es obligatorio llenar campo Nombres">
+                                <p:keyFilter regEx="/[a-z_ñ\s]/i" />
+                            </p:inputText>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+                
+               <p:column headerText="Apellidos" style="text-align: center; width:120px"
+                         filterBy="#{estudianteL.estudianteApe}" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{estudianteL.estudianteApe}"/></f:facet>
+                        <f:facet name="input">
+                            <p:inputText id="apellidos" placeholder="Ingrese sus Apellidos" 
+                                     validatorMessage="Apellidos: Ingresar solo Caracteres"
+                                     value="#{estudianteL.estudianteApe}"
+                                     size="40" maxlength="100"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase;color: black"
+                                     required="true"
+                                     requiredMessage="Es obligatorio llenar campo Apellidos">
+                                <p:keyFilter regEx="/[a-z_ñ\s]/i" />
+                            </p:inputText>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+                
+                <p:column headerText="Genero" style="text-align: center; width:100px">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{estudianteL.estudianteGenero}"/></f:facet>
+                        <f:facet name="input"><p:selectOneMenu id="genero" value="#{estudianteL.estudianteGenero}" >
+                                <f:selectItem itemLabel="Masculino" itemValue="M" />
+                                <f:selectItem itemLabel="Femenino" itemValue="F" />     
+                            </p:selectOneMenu></f:facet>
+                    </p:cellEditor>
+                </p:column>
+        
+                <p:column headerText="Estado" style="text-align: center; width:120px">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{estudianteL.estudianteSts}"/></f:facet>
+                        <f:facet name="input"> 
+                            <p:selectOneMenu id="estado" value="#{estudianteL.estudianteSts}" >
+                                <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="I" />     
+                            </p:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+            </p:dataTable>
+        </p:panel>    
+            
+            
+        </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>
+

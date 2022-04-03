@@ -1,0 +1,191 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">CURSOS</ui:define> 
+   
+    <ui:define name="content">
+        
+        <h:form id="Formulario">
+         
+            <p:panel header="Registro Curso" >
+            
+            <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+            
+            <p:layout style="min-width:400px;min-height:100px;">
+               <p:layoutUnit position="west" resizable="false" size="600" minSize="100" maxSize="600">
+                   
+                   <p:panelGrid style="width:100%">
+                       
+                    <p:row>
+                       <p:column style="width:10%">
+                            <p:outputLabel for="curso" value="CURSO:"/>
+                          </p:column>
+                          <p:column  style="width:30%">
+                            <p:inputText id="curso" placeholder="Ingrese Curso (Campo obligatorio)" 
+                                         value="#{cursoMB.anio}"
+                                     size="40" maxlength="30"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     autocomplete="off"
+                                     >
+                                <!--<f:validateLength minimum="1"/>-->
+                                <p:keyFilter regEx="/[A-Z_ñ\s]/i"/>
+                            </p:inputText> 
+                            <p:message for="curso" display="icon"/>
+                          </p:column>
+                       </p:row>
+                           
+                    <p:row>        
+                          <p:column style="width:10%">
+                              <p:outputLabel for="descripcion" value="DESCRIPCIÓN:"/>
+                          </p:column>
+                          <p:column style="width:30%">
+                             <p:inputText id="descripcion" placeholder="Ingrese Descripcion" 
+                                     value="#{cursoMB.descripcion}"
+                                     size="40" maxlength="50"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     autocomplete="off">
+                                 <!--<f:validateLength minimum="1"/>-->
+                                <p:keyFilter regEx="/[A-Z_ñ\s]/i"/>
+                             </p:inputText>
+                              <p:message for="descripcion" display="icon"/>
+                          </p:column>
+                       </p:row>
+                       
+                  
+                    </p:panelGrid>
+                   
+               </p:layoutUnit>
+
+               <p:layoutUnit position="center" resizable="false" size="100" minSize="100" maxSize="200" >
+                   
+                   <h:panelGrid id="botones" columns="1" >
+                      <p:commandButton value="NUEVO" icon="ui-icon-refresh" actionListener="#{cursoMB.resstableCurso()}" update="Formulario,growl" validateClient="true" />
+                      <br/> 
+                      <br/>    
+                      <p:commandButton value="GUARDAR" icon="ui-icon-disk" actionListener="#{cursoMB.ingresaCurso()}" update="Formulario,growl" validateClient="true"/>
+                      
+                      
+
+                   </h:panelGrid>
+                   
+               </p:layoutUnit>
+           </p:layout>
+            
+         </p:panel>    
+       
+        <p:panel header="">
+            <p:dataTable 
+                id="cursoDT" 
+                value="#{cursoMB.cursoList}" 
+                var="cursoL" 
+                emptyMessage="No existen Cursos registrados"
+                paginator="true" rows="10" rowsPerPageTemplate="10,20,30,40" 
+                style="width:100%;" 
+                editable="true" 
+                widgetVar="cursoTable"
+                >
+              
+                <p:ajax event="rowEdit" listener="#{cursoMB.actualizar}" update=":Formulario:growl"/>
+                <p:ajax event="rowEditCancel" listener="#{cursoMB.cancelar()}" update=":Formulario:growl"/>
+                
+                <p:column headerText="Editar" style="width:70px;text-align:center;">
+                    <p:rowEditor/>
+                </p:column>
+                
+                <p:column headerText="Eliminar" style="width:70px;text-align:center;">
+                    <p:commandButton process="cursoDT" icon="ui-icon-trash" actionListener="#{cursoMB.eliminar(cursoL)}" update=":Formulario:cursoDT">
+                        <p:confirm header="Confirmación" message="Está seguro de eliminar el Curso?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                    <p:confirmDialog  id="editDlg" global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"  />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>  
+                </p:column>
+                
+                <f:facet name="header" class="align:left;">
+                    <p:outputPanel>
+                        <h:outputText value="Busqueda en campos filtrados:  " />
+                        <p:inputText id="globalFilter" onkeyup="PF('cursoTable').filter()" style="width:150px" placeholder="Ingrese palabra"/>
+                    </p:outputPanel>
+                </f:facet>
+                
+ <!--                <p:column headerText="Id" style="text-align: center; width: 100px">
+                    <h:outputText value="#{cursoL.cursoId}" />
+                </p:column> --> 
+                
+            
+                <p:column headerText="Curso" style="text-align: center; width:120px"
+                          filterBy="#{cursoL.cursoNumero}" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{cursoL.cursoNumero}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <!--<p:inputText id="curso2" value="{cursoL.cursoNumero}" 
+                                     size="40" maxlength="30"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase; color: black">
+                            
+                            </p:inputText>-->
+                            <p:inputText id="curso2" placeholder="Ingrese Curso" 
+                                         value="#{cursoL.cursoNumero}"
+                                     size="40" maxlength="30"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase; color: black"
+                                     required="true"
+                                     requiredMessage="Es obligatorio llenar campo CURSO"
+                                     >
+                                <f:validateLength minimum="1"/> 
+                                <p:keyFilter regEx="/[A-Z_ñ\s]/i"/>
+                            </p:inputText> 
+                            </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+                <p:column headerText="Descripción" style="text-align: center; width:150px"
+                          filterBy="#{cursoL.cursoDescripcion}" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{cursoL.cursoDescripcion}"/></f:facet>
+                        <f:facet name="input">
+                            <!--<h:inputText id="descripci" value="{cursoL.cursoDescripcion}" size="100"  style="color: black"  />-->
+                            <p:inputText id="descripci" placeholder="Ingrese Descripcion" 
+                                     validatorMessage="Descripcion: Ingresar caracteres validos"
+                                     value="#{cursoL.cursoDescripcion}"
+                                     size="40" maxlength="50"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     required="true"
+                                     requiredMessage="Es obligatorio llenar campo DESCRIPCIÓN">
+                                 <f:validateLength minimum="1"/> 
+                                <p:keyFilter regEx="/[A-Z_ñ\s]/i"/>
+                             </p:inputText>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+            
+                
+                <p:column headerText="Estado" style="text-align: center; width:120px">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{cursoL.cursoSts}"/></f:facet>
+                        <f:facet name="input"> 
+                            <p:selectOneMenu id="genero" value="#{cursoL.cursoSts}" >
+                                <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="I" />     
+                            </p:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+            </p:dataTable>
+        </p:panel>    
+            
+         
+        </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>

@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" 
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">VOCABULARY</ui:define> 
+   
+    <ui:define name="content">
+        
+        <h:form id="Formulario2" enctype="multipart/form-data">
+         
+  
+        <p:panel header="VOCABULARY">
+
+                <p:dataTable 
+                    id="vocabularioDT" 
+                    value="#{verVocabularioMB.vocabularioList}" 
+                    var="vocabularioL" 
+                    emptyMessage="No existen Vocabularios registrados de la Unidad"
+                    paginator="true" rows="2" rowsPerPageTemplate="2,4,6,8,10,15,20" 
+                    style="width:100%;" 
+                    editable="true" 
+                    filteredValue="">
+                    
+
+                    <p:column id ="id" headerText= "Id" style="width:50px;text-align:center;">
+                           <h:outputText value="#{vocabularioL.vocabularioId}" escape = "false" />
+                    </p:column>
+
+                    <p:column headerText="Vocabulario" style="width:500px;text-align:left;">
+                        <h:outputText value="#{vocabularioL.vocabularioDescripcion}" escape="false" />
+                    </p:column>
+                    
+                    <p:column headerText="Estado" style="width:60px;text-align:center;">
+                        <h:outputText value="#{vocabularioL.vocabularioSts}" />
+                    </p:column>
+                    
+                </p:dataTable>
+               
+            <div class="row">
+                    <div class="col-lg-3 col-xs-6">
+                        <div class="small-box bg-red-active">   
+                            <!--<a href="{request.contextPath}/estudiante/pag_unidades.jsf?DestrezaId={verVocabularioMB.destreza_Id}" class="small-box-footer">Return <i class="fa fa-arrow-circle-right"></i></a>-->
+                            <p:commandLink id="btnRegresar"  style="font-size: 22px; color: #ffffff;" action="#{verVocabularioMB.Regresar()}"  >
+                                <h:outputText value="Regresar  "/><i class="fa fa-arrow-circle-right"></i>
+                            </p:commandLink>
+                            
+                        </div>
+                    </div>
+                </div>
+        </p:panel>  
+        
+
+        </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>
+

@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" 
+        >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">Skills</ui:define> 
+   
+    <ui:define name="content">
+ 
+            <h:form>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                         <i class="fa fa-cogs">
+                         </i>
+                         SKILLS
+                     </div>
+                 </div>     
+                <div class="row">
+                        
+                    <ui:repeat var="destreza" value="#{destrezaMB.destreza}">
+                        
+                        <div class="col-lg-3 col-xs-6">
+                         
+                            <div class="#{destreza.destrezaClase}">
+                                <div class="inner">
+                                   <!--<h3>{indexMB.cantidadUsuario}</h3>-->
+                                   <h2>«</h2>
+                                   <p>#{destreza.destrezaNombre}</p>
+                                </div>
+                                <div class="icon">
+                                   <i class="#{destreza.destrezaIcono}"></i> 
+                                </div>
+
+                                <!--<a href="{request.contextPath}/estudiante/pag_unidades.jsf?DestrezaId={destreza.destrezaId}" class="small-box-footer">View Units <i class="fa fa-arrow-circle-right"></i></a>-->
+                                
+                                <div class="small-box-footer">
+                                    <p:commandLink id="btnVerUnidad"  style="font-size: 22px; color: #ffffff;" action="#{destrezaMB.ver_unidad(destreza.destrezaId)}"  >
+                                         <h:outputText value="View Units  "/><i class="fa fa-arrow-circle-right"></i>
+                                    </p:commandLink>
+                                </div>
+                                
+                            </div>
+                        
+                        </div>
+                    
+                    </ui:repeat>
+                    
+                 
+               </div>
+                
+               
+            </h:form>
+  
+     </ui:define>
+    
+</ui:composition>
+</html>

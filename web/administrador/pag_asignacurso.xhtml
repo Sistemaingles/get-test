@@ -1,0 +1,144 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">ASIGNACIÓN DE CURSOS</ui:define> 
+   
+    <ui:define name="content">
+        
+        <h:form id="Formulario">
+         
+            <p:panel header="Asignación Curso" >
+            
+            <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+            
+            <p:layout style="min-width:400px;min-height:200px;">
+               <p:layoutUnit position="west" resizable="true" size="600" minSize="400" maxSize="600">
+                   
+                   <p:panelGrid style="width:100%">
+ 
+                        <p:row>
+                            <p:column style="width:10%">
+                                <p:outputLabel value="PERIODO (*) :"/>
+                            </p:column>
+                              <p:column style="width:30%">
+                                <p:selectOneMenu id="periodo" value="#{asignaCursoMB.periodo_cod}"  >     
+                                    <f:selectItems value="#{asignaCursoMB.periodoList}" var="periodo" itemLabel="#{periodo.periodoAnio}" itemValue="#{periodo.periodoId}" />
+                                </p:selectOneMenu>
+                                <p:message for="periodo" />
+                              </p:column>
+                        </p:row>    
+
+
+                        <p:row>
+                            <p:column style="width:10%">
+                                <p:outputLabel value="CURSO (*) :"/>
+                            </p:column>
+                              <p:column style="width:30%">
+                                <p:selectOneMenu id="curso" value="#{asignaCursoMB.curso_cod}" >     
+                                    <f:selectItem itemLabel="Escoja un Curso" itemValue="#{null}" noSelectionOption="true"/>
+                                    <f:selectItems value="#{asignaCursoMB.cursoList}" var="curso" itemLabel="#{curso.cursoNumero}" itemValue="#{curso.cursoId}" />
+                                </p:selectOneMenu>
+                                <p:message for="curso" />
+                              </p:column>
+                        </p:row>         
+
+
+                        <p:row>
+                            <p:column style="width:10%">
+                                <p:outputLabel value="PARALELO (*) :"/>
+                            </p:column>
+                              <p:column style="width:30%">
+                                <p:selectOneMenu id="paralelo" value="#{asignaCursoMB.paralelo_cod}" >     
+                                    <f:selectItem itemLabel="Escoja un Paralelo" itemValue="#{null}" noSelectionOption="true"/>
+                                    <f:selectItems value="#{asignaCursoMB.paraleloList}" var="paralelo" itemLabel="#{paralelo.paraleloNum}" itemValue="#{paralelo.paraleloId}" />
+                                </p:selectOneMenu>
+                                <p:message for="paralelo" />
+                              </p:column>
+                        </p:row>    
+                       
+
+                    </p:panelGrid>
+                   
+               </p:layoutUnit>
+
+               <p:layoutUnit position="center" resizable="true" size="200" minSize="100" maxSize="200" >
+                   
+                   <h:panelGrid id="botones" columns="1" >
+                   
+                      <!--<br/> 
+                      <p:commandButton value="CONSULTAR" icon="ui-icon-check" actionListener="{asignaCursoMB.buscaPeriodoLectivos()}" update="periodoDT" validateClient="true"/>    -->
+                      <br/>
+                      <p:commandButton value="NUEVO" icon="ui-icon-refresh" actionListener="#{asignaCursoMB.reestableceCursoAsignado()}" update="Formulario,growl" validateClient="true" />
+                      <br/>    
+                      <p:commandButton value="GUARDAR" icon="ui-icon-disk" actionListener="#{asignaCursoMB.ingresaCursoAsignado()}" update="Formulario,growl" validateClient="true"/>
+                      
+                   </h:panelGrid>
+                   
+               </p:layoutUnit>
+           </p:layout>
+   
+        </p:panel>    
+       
+        <p:panel header="DETALLE DE CURSOS ASIGNADOS">
+            <p:dataTable 
+                id="periodoDT" 
+                value="#{asignaCursoMB.detperiodoList}" 
+                var="periodoL" 
+                emptyMessage="No existen Cursos asignados"
+                paginator="true" rows="5" rowsPerPageTemplate="5,10,15,20" 
+                style="width:100%;" 
+                editable="true" 
+                
+                widgetVar="cursoAsigTable"
+                sortMode="single">
+                
+                <!--filteredValue="{asignaCursoMB.filteredPeriodo}"-->
+                
+                <p:ajax event="rowEdit" listener="#{asignaCursoMB.actualizar}" update=":Formulario:growl"/>
+                <p:ajax event="rowEditCancel" listener="#{asignaCursoMB.cancelar()}" update=":Formulario:growl"/>
+                
+                <p:column headerText="Editar" style="width:80px;text-align:center;">
+                    <p:rowEditor/>
+                </p:column>
+                
+                <p:column headerText="Periodo" style="text-align: center; width: 200px">
+                    <h:outputText value="#{periodoL.periodo_descripcion}" />
+                </p:column> 
+                
+                <p:column headerText="Curso" style="text-align: center; width: 150px"
+                          filterBy="#{periodoL.curso_descripcion}" filterMatchMode="contains"
+                          sortBy="#{periodoL.curso_descripcion}">
+                    <h:outputText value="#{periodoL.curso_descripcion}" />
+                </p:column>
+                
+                <p:column headerText="Paralelo" style="text-align: center; width: 150px">
+                    <h:outputText value="#{periodoL.paralelo_nombre}" />
+                </p:column>
+                
+                <p:column headerText="Estado" style="text-align: center; width:120px">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{periodoL.estado}"/></f:facet>
+                        <f:facet name="input"> 
+                            <p:selectOneMenu id="estado" value="#{periodoL.estado}" >
+                                <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="I" />     
+                            </p:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+            </p:dataTable>
+        </p:panel>    
+            
+            
+        </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>

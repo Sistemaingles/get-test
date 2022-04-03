@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    
+     
+     
+    <h:head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+        <!-- Bootstrap 3.3.5 -->
+         <h:outputStylesheet library="bootstrap" name="css/bootstrap.min.css"/>
+        <h:outputStylesheet library="css" name="font-awesome.min.css"/>
+        <h:outputStylesheet library="css" name="ionicons.min.css"/>
+        <h:outputStylesheet library="dist" name="css/AdminLTE.min.css"/>
+        <h:outputStylesheet library="plugins" name="iCheck/square/blue.css"/>
+        <style type="text/css">
+            div[id="growlLogin_container"] {
+                top: 60px;
+                z-index:1001; 
+            }
+            div[id="growlLogin_container"] {
+                position:absolute;
+                top:60px;
+                z-index:1001;
+            }
+        </style>
+        
+        
+    </h:head>
+
+    <h:body  class="hold-transition skin-yellow-light login-page ">
+        
+        <h:form id="formOlvPass">
+             <p:growl id="growl" showDetail="true" />
+<!--         <p:messages globalOnly="false" showDetail="true" />-->
+          <div class="login-box">
+                <div class="login-logo">
+                    <b><span>Sistema Web de Fortalecimiento del Idioma Extranjero</span></b>
+               </div> <!-- /.login-logo -->
+                <div class="login-box-body">
+                    <p  class="login-box-msg">Recuperar Contraseña</p>
+
+                    <div  class="form-group has-feedback">
+                        <p:inputText id="txtUserName" styleClass="form-control" label="Ingrese Usuario" value="#{olvidePassMb.usuario}" placeholder="Ingrese Usuario" >
+                            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                        </p:inputText>
+                    
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p:commandButton id="btnLogin" partialSubmit="true" actionListener="#{olvidePassMb.validaUsr}" value="Enviar Confirmación" styleClass="btn btn-lg btn-block btn-flat" update=":formOlvPass:growl, idDlgConfimacion" ></p:commandButton>
+                         <!--/.col-->
+                            <h:commandLink action="#{olvidePassMb.goLogin()}" value="Regresar" style="font-size:12px;text-align:right"/>
+                        </div>
+                    </div>
+
+                    
+
+                </div> <!--/.login-box-body -->
+            </div> <!-- /.login-box -->
+            <p:dialog id="idDlgConfimacion" width="400"
+                header="MENSAJE CONFIRMACIÓN" widgetVar="dialogConfir" modal="true" showEffect="fade" hideEffect="fade" resizable="false" position="center center">
+                <h:panelGrid columns="1" cellpadding="5" width="100%">
+                    <h4>#{olvidePassMb.texto}</h4>
+                </h:panelGrid>
+                <f:facet name="footer">
+                    <div class="footer-section" align="center">
+                        <center>
+                          <p:commandButton icon="fa fa-check"  value="Aceptar" onclick="PF('dialogConfir').hide()" immediate="true" onstart="PF('Loading').show()" onsuccess="PF('Loading').hide()"/>
+                         </center>
+                   </div>
+                </f:facet>
+            </p:dialog>
+            
+        </h:form>
+        <h:outputScript library="bootstrap" name="js/bootstrap.min.js"/>
+        <h:outputScript library="plugins" name="iCheck/icheck.min.js"/>
+        <h:outputScript name="jquery/jquery.js" library="primefaces" />
+       
+        <script>
+            $(function () {
+                $('input').iCheck({
+                    checkboxClass: 'icheckbox_square-blue',
+                    radioClass: 'iradio_square-blue',
+                    increaseArea: '20%' // optional
+                });
+            });
+        </script>
+
+    </h:body>
+
+</ui:composition>

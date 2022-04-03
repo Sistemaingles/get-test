@@ -1,0 +1,133 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">ACTIVITIES REPORT</ui:define> 
+   
+    <ui:define name="content">
+        
+    <h:form id="formTaller">
+
+        <p:panel header="ACTIVITIES REPORT" >
+
+                <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+
+                <p:layout  style="min-width:400px;min-height:100px;">
+                   <p:layoutUnit position="west" resizable="true" size="700" minSize="700" maxSize="1000">
+                       <p:panelGrid style="width:100%; height: 25px">
+                           
+                        <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="DESTREZA:"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                            <p:selectOneMenu id="destreza" value="#{reporteActividadMB.destreza_id}" >     
+                                <f:selectItem itemLabel="(TODAS)" itemValue="#{0}"/>
+                                <f:selectItems value="#{reporteActividadMB.destrezaList}" var="destreza" itemLabel="#{destreza.destrezaNombre}" itemValue="#{destreza.destrezaId}" />
+                            </p:selectOneMenu>
+                          </p:column>
+                       </p:row> 
+                       
+                   
+                       </p:panelGrid>
+
+
+                   </p:layoutUnit>
+
+                   <p:layoutUnit position="center" resizable="true" size="200" minSize="100" maxSize="200" >
+
+                       <h:panelGrid id="botones" columns="1" >
+                          <br/> 
+                          <p:commandButton value="CONSULTAR" icon="ui-icon-check"  update="tallerDT" actionListener="#{reporteActividadMB.buscaResultadoActividades()}" validateClient="true"/>    
+                          <br/> 
+                          <!--<p:commandButton value="IMPRIMIR" icon=" ui-icon-print"  update=":formTaller:ayudaDetail" actionListener="{reporteActividadMB.generarReporte()}"  oncomplete="PF('Dialog').show()"/>  -->
+                          <p:commandButton id="btn_imprimir" value = "IMPRIMIR"   actionListener="#{reporteActividadMB.generarReporte()}"  icon="ui-icon-print" ajax="false" />
+                           
+                          
+                          <br/> 
+                       </h:panelGrid>
+                       
+                 
+                   </p:layoutUnit>
+               </p:layout>
+
+
+            </p:panel>    
+        
+       
+        <p:panel header="">
+            <p:layout  style="min-width:400px;min-height:350px;">
+                <p:layoutUnit position="west" resizable="false" size="700" minSize="700" maxSize="1000">
+                    <p:dataTable 
+                    id="tallerDT" 
+                    value="#{reporteActividadMB.resultadoList}" 
+                    var="resultado" 
+                    emptyMessage="No existen actividades registradas."
+                    paginator="true" rows="5" rowsPerPageTemplate="10,20,30,40" 
+                    style="width:100%;" 
+                    editable="true" 
+                    filteredValue="">
+
+                    <p:column headerText="Destreza" style="width:100px;text-align:center;">
+                        <h:outputText value="#{resultado.destreza} " />
+                    </p:column>
+
+                    <p:column headerText="No. Unidad" style="width:70px;text-align:center;">
+                        <h:outputText value="#{resultado.unidad_descripcion} " />
+                    </p:column>
+
+                    <p:column headerText="Unidad" style="width:120px;text-align:center;">
+                        <h:outputText value="#{resultado.unidad_nombre} " />
+                    </p:column>
+                    <p:column headerText="SubTemas" style="width:200px;text-align:center;">
+                        <h:outputText value="#{resultado.subtemaDesc} " />
+                    </p:column>
+
+                    <p:column headerText="Puntaje Subtemas" style="width:100px;text-align:center;">
+                        <h:outputText value="#{resultado.resultados}" />
+                    </p:column>
+
+                    <p:column headerText="Preguntas Acertadas" style="width:100px;text-align:center;">
+                        <h:outputText value="#{resultado.aciertos}" />
+                    </p:column>
+
+                    <p:column headerText="Puntaje" style="width:100px;text-align:center;">
+                        <h:outputText value="#{resultado.puntaje}" />
+                    </p:column>
+
+                    <p:column headerText="Promedio" style="width:100px;text-align:center;">
+                        <h:outputText value="#{resultado.promedio}" />
+                    </p:column>
+
+                    <p:column headerText="Pruebas" style="width:100px;text-align:center;">
+                        <h:outputText value="#{resultado.pruebas}" />
+                    </p:column>
+
+
+                    </p:dataTable>
+            
+                </p:layoutUnit>
+                
+                <p:layoutUnit position="center" resizable="false" size="200" minSize="100" maxSize="200" >
+                    <p:panelGrid  columns="2" rendered="#{not empty reporteActividadMB.url}" columnClasses="label,value">
+                        <p:media  value="#{verArchivosMB.reporte}" style="min-width:1000px;min-height:300px;"  width="350" height="650" cache="false" player="pdf" >
+                        </p:media>
+                    </p:panelGrid>
+                </p:layoutUnit>
+     
+            </p:layout>
+            
+       
+            
+        </p:panel>
+        
+    </h:form>
+
+     </ui:define>
+    
+</ui:composition>
+</html>

@@ -1,0 +1,204 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" 
+      >
+
+    <ui:composition template="/template.xhtml">
+
+        <ui:define name="pageAtual">Activities</ui:define> 
+
+        <ui:define name="content">
+
+            <h:form id="formTaller">
+
+                <p:panel header="">    
+                    <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+
+                    <p:carousel  headerText="ACTIVITIES" value="#{presentaTallerMB.tallerList}" var="taller"  itemStyle="text-align:center" numVisible="1" 
+                                easing="easeOutBounce" style="width: 1050px;" circular="true">
+
+                        <p:panelGrid columns="1" style="text-align: left; " layout="grid">
+
+                            <p:column>    
+                                <p:spacer width="20" />
+                                <!--<h:outputText class="" value="{taller.actividad}" escape = "false" style="text-align: left; width: 450px; font-size: 16px;" /> -->                 
+                                <p:outputLabel value="#{taller.actividad}" escape="false" style="text-align: left; width: 450px; font-size: 16px;" />
+                            </p:column>
+
+                            <!--<h:outputText value="&lt;br/&gt;" escape="false" />-->
+
+                            <p:column>        
+                                <p:spacer width="40" />
+                                <!--<h:outputText value="{taller.pregunta}" escape = "false"  style="text-align: left; width: 450px; font-size: 14px;" />-->
+                                <p:outputLabel value="#{taller.pregunta}" escape="false" />
+                            </p:column>
+
+                            <p:column>
+                                <p:spacer width="100" />
+                                
+                                <p:media value="/resources/actividades/#{taller.archivo}" player="quicktime" width="100" height="100">
+                                    <f:param name="autoPlay" value="false" />
+                                    <f:param name="autostart" value="false" />
+                                </p:media>  
+                            </p:column>
+
+                            <p:column>
+                                <p:spacer width="40" />
+                            </p:column>
+
+                            <!--preguntas tipo ListBox-->
+                            <p:row rendered="#{'L' eq taller.tipo_pregunta}">
+                                <p:column>
+                                    <p:selectOneListbox id="listbox" value="#{taller.idRespuestSelec}" style="width: 350px">
+                                        <f:selectItems value="#{taller.respuestas}"  var="respuestas" itemLabel="#{respuestas.descripcion}" itemValue="#{respuestas.id}" />
+                                    </p:selectOneListbox>
+
+                                </p:column>
+                            </p:row>
+
+                            <!--preguntas tipo Opción Unica-->
+                            <p:row rendered="#{'U' eq taller.tipo_pregunta}">
+                                <p:column>
+                                    <p:selectOneRadio id="radio" value="#{taller.idRespuestSelec}" layout="grid" columns="1" styleClass="grid-radio">
+                                        <f:selectItems value="#{taller.respuestas}"  var="respuestas" itemLabel="#{respuestas.descripcion}" itemValue="#{respuestas.id}" />
+                                    </p:selectOneRadio>
+                                </p:column>
+                            </p:row>
+
+                            <!--preguntas tipo Opción Múltiple-->
+                            <p:row rendered="#{'M' eq taller.tipo_pregunta}">
+                                <p:selectBooleanCheckbox id="checkbox" value="#{taller.idRespuestSelec}" style="width: 350px">
+                                    <f:selectItems value="#{taller.respuestas}"  var="respuestas" itemLabel="#{respuestas.descripcion}" itemValue="#{respuestas.id}" />
+                                </p:selectBooleanCheckbox>
+                            </p:row>
+
+                            <!--preguntas tipo Ingresar Respuestas-->
+                            <p:row rendered="#{'R' eq taller.tipo_pregunta}">
+                                <ui:repeat var="respuestas" value="#{taller.respuestas}">
+                                    <p:column>
+                                        <p:spacer width="40" />
+                                        <h:outputText value="#{respuestas.orden}.-"  />
+                                        <p:spacer width="20" />
+                                        <p:inputText  value="#{respuestas.status}"  style="text-align: left; width: 450px; font-size: 14px;" autocomplete="off" />
+                                        <h:outputText value="&lt;br/&gt;" escape="false" />
+                                    </p:column>
+
+                                </ui:repeat>
+                            </p:row>
+
+                        </p:panelGrid>
+                    </p:carousel>
+
+                    <f:facet name="footer" >
+                        <p:spacer width="40" />
+                        <!--<p:outputLabel value="En total son  {presentaTallerMB.tallerList.size()} Actividades de la Unidad {taller.unidad}."></p:outputLabel>-->
+
+                        <p:row rendered="#{0 eq presentaTallerMB.tallerList.size() }">
+                            <h:outputText value="No existen actividades asignadas." escape="false" style="text-align: left; width: 450px; font-size: 16px;" />
+                        </p:row>
+
+                        <p:row rendered="#{ presentaTallerMB.tallerList.size() > 0 }">
+                            <h:outputText value="En total son  #{presentaTallerMB.tallerList.size()} Actividades de la Unidad #{taller.unidad}." escape="false" style="text-align: left; width: 450px; font-size: 16px;" />
+                        </p:row>
+                        <p:spacer width="30" />
+
+                        <!--<p:commandButton id="btn_ver" value = "Ver Resultado"  icon="ui-icon-check" update="display2" oncomplete="PF('dlg2').show()" />-->
+
+                        <p:row rendered="#{ presentaTallerMB.tallerList.size() > 0 }">
+                            <p:commandButton id="btn_guardar" value = "Guardar Respuesta"  icon="ui-icon-disk"  update="growl,display2" oncomplete="PF('dlg2').show()" actionListener="#{presentaTallerMB.ingresaTaller()}" validateClient="true" />
+                        </p:row>
+
+                        <p:spacer width="30" />
+
+                        <div class="col-xs-2">
+                            <div class="col-lg-6  small-box bg-red-active">
+                                <!--<a href="{request.contextPath}/estudiante/pag_actividades.jsf" class="small-box-footer">Return <i class="fa fa-arrow-circle-right"></i></a>-->
+                                <p:commandLink id="btnRegresar"  style="font-size: 22px; color: #ffffff;" action="#{presentaTallerMB.Regresar(presentaTallerMB.destrezaId)}"  >
+                                    <h:outputText value="Regresar  "/><i class="fa fa-arrow-circle-right"></i>
+                                </p:commandLink>
+                            </div>
+                        </div>
+
+                        <p:dialog header="Resultados" modal="true" resizable="true" closable="true" showEffect="fade" widgetVar="dlg2" width="600px">
+
+                            <p:panelGrid columns="1" id="display2" style="text-align: left; width:100%; font-size: 14px;">
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="Valor de la actividad para Aprobar:"  style="text-align: left;  font-size: 16px; font-weight:bold;"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="Debe ser Mayor o igual a  #{presentaTallerMB.pct_Aprobado} %" style="text-align: left; font-size: 16px;"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="Total de Preguntas / Total de Aciertos:"  style="text-align: left; font-size: 16px; font-weight:bold;"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="#{presentaTallerMB.resultado.resultadototRespuesta} / #{presentaTallerMB.resultado.resultadototAciertos}" style="text-align: left; font-size: 16px;">
+                                        </h:outputText>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="Calificación:" style="text-align: left; font-size: 16px; font-weight:bold;" />
+                                    </p:column>
+                                </p:row> 
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="#{presentaTallerMB.resultado.resultadoPorcentaje}" style="text-align: left; font-size: 16px;">
+                                            <f:convertNumber pattern="#0.00" />
+                                        </h:outputText>
+                                    </p:column>
+                                </p:row> 
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="Estado:"  style="text-align: left; font-size: 16px; font-weight:bold;"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row rendered="#{'APROBADO' eq presentaTallerMB.resultado.resultadoEstado}">
+                                    <p:column>
+                                        <h:outputText value="#{presentaTallerMB.resultado.resultadoEstado}" style="text-align: left;  font-size: 16px; color: #009900" />
+                                    </p:column>
+                                </p:row>
+
+                                <p:row rendered="#{'REPROBADO' eq presentaTallerMB.resultado.resultadoEstado}">
+                                    <p:column>
+                                        <h:outputText value="#{presentaTallerMB.resultado.resultadoEstado}" style="text-align: left;  font-size: 16px; color: #ac2925" />
+                                    </p:column>
+                                </p:row>
+                                
+                                <p:row>
+                                    <p:column>
+                                        <p:commandButton value="Aceptar" action="#{presentaTallerMB.Regresar(presentaTallerMB.destrezaId)}" />
+                                    </p:column>
+                                </p:row>    
+                            </p:panelGrid>
+
+                        </p:dialog>
+
+                    </f:facet>
+
+                </p:panel>
+
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</html>

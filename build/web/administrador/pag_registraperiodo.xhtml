@@ -1,0 +1,188 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">PERIODO</ui:define> 
+   
+    <ui:define name="content">
+        
+        <h:form id="Formulario">
+         
+            <p:panel header="Registro Periodo" >
+            
+            <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+            
+            <p:layout style="min-width:400px;min-height:200px;">
+               <p:layoutUnit position="west" resizable="true" size="600" minSize="400" maxSize="600">
+                   
+                   <p:panelGrid style="width:100%">
+                       
+                    <p:row>
+                       <p:column style="width:10%">
+                            <p:outputLabel for="periodo" value="PERIODO:"/>
+                          </p:column>
+                          <p:column style="width:30%">
+                            <p:inputText id="periodo" placeholder="INGRESE PERIODO" 
+                                     validatorMessage="Es obligatorio llenar campo PERIODO"
+                                     value="#{periodoMB.anio}"
+                                     size="40" maxlength="4"
+                                     autocomplete="off">
+                                <!--<f:validateLength minimum="1" />--> 
+                                <p:keyFilter regEx="/[0-9\s]/i"/>
+                            </p:inputText>
+                            <p:message for="periodo" display="icon"/>
+                          </p:column>
+                    </p:row>
+                          
+                    <p:row>        
+                          <p:column style="width:10%">
+                            <p:outputLabel for="descripcion" value="DESCRIPCIÓN:"/>
+                          </p:column>
+                          <p:column style="width:30%">
+                             <p:inputText id="descripcion" placeholder="Ingrese Descripcion" 
+                                     validatorMessage="Es obligatorio llenar campo DESCRIPCIÓN."
+                                     value="#{periodoMB.descripcion}"
+                                     size="40" maxlength="50"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     autocomplete="off"
+                                     >
+                                <!--<f:validateLength minimum="1"/>-->
+                                <p:keyFilter regEx="/[A-Z_ñ\s]/i"/>
+                             </p:inputText>
+                              <p:message for="descripcion" display="icon"/>  
+                          </p:column>
+                       </p:row>
+                           
+                  
+                    </p:panelGrid>
+                   
+               </p:layoutUnit>
+
+               <p:layoutUnit position="center" resizable="true" size="200" minSize="100" maxSize="200" >
+                   
+                   <h:panelGrid id="botones" columns="1" >
+                      <p:commandButton value="NUEVO" icon="ui-icon-refresh" actionListener="#{periodoMB.resstablePeriodo()}" update="Formulario,growl" validateClient="true"/>
+                      <br/> 
+                      <!--<p:commandButton value="CONSULTAR" icon="ui-icon-check" actionListener="{periodoMB.buscaPeriodo()}" update="periodoDT" validateClient="true"/>    -->
+                      <br/>    
+                      <p:commandButton value="GUARDAR" icon="ui-icon-disk" actionListener="#{periodoMB.ingresaPeriodo()}" update="Formulario,growl" validateClient="true"/>
+                      
+                      
+
+                   </h:panelGrid>
+                   
+               </p:layoutUnit>
+           </p:layout>
+ 
+        </p:panel>    
+       
+        <p:panel header="">
+            <p:dataTable 
+                id="periodoDT" 
+                value="#{periodoMB.periodoList}" 
+                var="periodoL" 
+                emptyMessage="No existen Periodos registrados"
+                paginator="true" rows="5" rowsPerPageTemplate="5,10,15,20" 
+                style="width:100%;" 
+                editable="true" 
+                widgetVar="periodoTable"
+                >
+              
+                <p:ajax event="rowEdit" listener="#{periodoMB.actualizar}" update=":Formulario:growl"/>
+                <p:ajax event="rowEditCancel" listener="#{periodoMB.cancelar()}" update=":Formulario:growl"/>
+                
+                <p:column headerText="Editar" style="width:70px;text-align:center;">
+                    <p:rowEditor/>
+                </p:column>
+                
+                <p:column headerText="Eliminar" style="width:70px;text-align:center;">
+                    <p:commandButton process="periodoDT" icon="ui-icon-trash" actionListener="#{periodoMB.eliminar(periodoL)}" update=":Formulario:periodoDT">
+                        <p:confirm header="Confirmación" message="Está seguro de eliminar el Periodo?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                    <p:confirmDialog  id="editDlg" global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"  />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>  
+                </p:column>
+                
+                <f:facet name="header" class="align:left;">
+                    <p:outputPanel>
+                        <h:outputText value="Busqueda en campos filtrados:  " />
+                        <p:inputText id="globalFilter" onkeyup="PF('periodoTable').filter()" style="width:150px" placeholder="Ingrese palabra"/>
+                    </p:outputPanel>
+                </f:facet>
+                
+ <!--               <p:column headerText="Id" style="text-align: center; width: 100px">
+                    <h:outputText value="#{periodoL.periodoId}" />
+                </p:column> -->
+                
+                <p:column headerText="Periodo" style="text-align: center; width:120px"
+                          filterBy="#{periodoL.periodoAnio}" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{periodoL.periodoAnio}"/></f:facet>
+                        <f:facet name="input">
+                            <p:inputText id="period" placeholder="INGRESE PERIODO" 
+                                     validatorMessage="Es obligatorio llenar campo PERIODO"
+                                     value="#{periodoL.periodoAnio}"
+                                     size="40" maxlength="50"
+                                     required="true"
+                                     requiredMessage="Es obligatorio llenar campo PERIODO"
+                                     style="color: black">
+                                <f:validateLength minimum="1" /> 
+                                <p:keyFilter regEx="/[0-9-_,/.\s]/i"/>
+                            </p:inputText>
+                            
+                            <!--<h:inputText id="periodo" value="{periodoL.periodoAnio}" size="100"  style="color: black"  />-->
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+                <p:column headerText="Descripción" style="text-align: center; width:150px"
+                          filterBy="#{periodoL.periodoDescripcion}" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{periodoL.periodoDescripcion}"/></f:facet>
+                        <f:facet name="input">
+                            <p:inputText id="descripci" placeholder="Ingrese Descripcion" 
+                                     validatorMessage="Campo obligatorio: Ingresar solo letras."
+                                     value="#{periodoL.periodoDescripcion}"
+                                     size="40" maxlength="50"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase; color: black"
+                                     required="true"
+                                     requiredMessage="Es obligatorio llenar campo DESCRIPCIÓN"
+                                     >
+                                <f:validateLength minimum="1"/> 
+                                <p:keyFilter regEx="/[A-Z_ñ\s]/i"/>
+                             </p:inputText>
+                            <!--<h:inputText id="descripci" value="{periodoL.periodoDescripcion}" size="100"  style="color: black"  />-->
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+            
+                
+                <p:column headerText="Estado" style="text-align: center; width:120px">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{periodoL.periodoSts}"/></f:facet>
+                        <f:facet name="input"> 
+                            <p:selectOneMenu id="estado" value="#{periodoL.periodoSts}" >
+                                <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="I" />     
+                            </p:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+            </p:dataTable>
+        </p:panel>    
+            
+         
+        </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>

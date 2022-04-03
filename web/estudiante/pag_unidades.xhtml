@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" 
+        >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">UNITS</ui:define> 
+   
+    <ui:define name="content">
+ 
+            <h:form>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                         <i class="fa fa-cogs">
+                         </i>
+                         UNITS
+                     </div>
+                 </div>     
+                   
+                <div class="row">
+                        
+                    <ui:repeat var="unidad" value="#{unidadMB.unidad}">
+                        
+                        <div class="col-lg-3 col-xs-6">
+                           <div class="#{unidad.clase}">
+                                <div class="inner">
+                                    <h2>#{unidad.descripcion}</h2>
+
+                                    <p>#{unidad.nombres}</p>
+                                </div>
+                               
+                                <div class="icon">
+                                    <i class="#{unidad.icono}"></i> 
+                                </div>
+                         
+                            <!--<a href="{request.contextPath}/estudiante/pag_subtemas.jsf?UnidadId={unidad.unidad_id}" class="small-box-footer">View Lessons <i class="fa fa-arrow-circle-right"></i></a>-->
+                            <!--<a href="{request.contextPath}/estudiante/pag_vocabulario.jsf?UnidadId={unidad.unidad_id}" class="small-box-footer">View Vocabulary <i class="fa fa-arrow-circle-right"></i></a>-->
+                             
+                            <div class="small-box-footer">
+                                    <p:commandLink id="btnVerLeccion"  style="font-size: 22px; color: #ffffff;" action="#{unidadMB.ver_Leccion(unidad.unidad_id)}"  >
+                                         <h:outputText value="View Lessons  "/><i class="fa fa-arrow-circle-right"></i>
+                                    </p:commandLink>
+                            </div>
+                            
+                            <div class="small-box-footer">
+                                    <p:commandLink id="btnVerVocabulario"  style="font-size: 22px; color: #ffffff;" action="#{unidadMB.ver_Vocabulario(unidad.unidad_id)}"  >
+                                         <h:outputText value="View Vocabulary   "/><i class="fa fa-arrow-circle-right"></i>
+                                    </p:commandLink>
+                            </div>
+                            
+                            </div>
+                    
+                    
+                        </div>  
+                     </ui:repeat>
+                </div>  
+                
+                    <div class="row">
+                        <div class="col-lg-3 col-xs-6">
+                            <div class="small-box bg-red-active">
+                         
+                         
+                                <a href="#{request.contextPath}/estudiante/pag_actividades.jsf" class="small-box-footer">Regresar <i class="fa fa-arrow-circle-right"></i></a>
+                                <!--<h:commandLink value="Return" id="btn2" action="regresar1" >
+                                </h:commandLink>-->
+                             
+                            </div>
+                        </div>
+                    
+                    </div>    
+               
+               
+            </h:form>
+  
+     </ui:define>
+    
+</ui:composition>
+</html>

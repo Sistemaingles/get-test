@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    
+
+    <application>
+        <action-listener>org.primefaces.application.DialogActionListener</action-listener>
+        <navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+        <view-handler>org.primefaces.application.DialogViewHandler</view-handler>
+    </application>
+    <navigation-rule>
+        <from-view-id>/estudiante/pag_unidades.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>ir3</from-outcome>
+            <to-view-id>/estudiante/pag_vocabulario.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>ir2</from-outcome>
+            <to-view-id>/estudiante/pag_subtemas.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>regresar1</from-outcome>
+            <to-view-id>/estudiante/pag_actividades.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/estudiante/pag_subtemas.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>regresar2</from-outcome>
+            <to-view-id>/estudiante/pag_unidades.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>ir4</from-outcome>
+            <to-view-id>/estudiante/pag_presentataller.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/estudiante/pag_vocabulario.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>regresar3</from-outcome>
+            <to-view-id>/estudiante/pag_unidades.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/estudiante/pag_presentataller.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>regresar4</from-outcome>
+            <to-view-id>/estudiante/pag_subtemas.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/estudiante/pag_actividades.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>ir1</from-outcome>
+            <to-view-id>/estudiante/pag_unidades.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+</faces-config>

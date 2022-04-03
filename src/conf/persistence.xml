@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="project" transaction-type="JTA">
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <jta-data-source>java:/jboss/datasources/system_web</jta-data-source>
+    <class>com.entidades.TblPeriodo</class>
+    <class>com.entidades.TblCurso</class>
+    <class>com.entidades.TblParalelo</class>
+    <class>com.entidades.TblCursoparalelo</class>
+    <class>com.entidades.TblDocente</class>
+    <class>com.entidades.TblDocentecurso</class>
+    <class>com.entidades.TblEstudiante</class>
+    <class>com.entidades.TblEstudiantecurso</class>
+    <class>com.entidades.TblUnidad</class>
+    <class>com.entidades.TblSubtema</class>
+    <class>com.entidades.TblDestreza</class>
+    <class>com.entidades.TblPresentaciontaller</class>
+    <class>com.entidades.TblRespuesta</class>
+    <class>com.entidades.TblActividad</class>
+    <class>com.entidades.TblResultadotaller</class>
+    <class>com.entidades.TblResultado</class>
+    <class>com.entidades.TblVocabulario</class>
+    <class>com.entidades.TblMenu</class>
+    <class>com.entidades.TblMenuRoles</class>
+    <class>com.entidades.TblRol</class>
+    <class>com.entidades.TblUsuarios</class>
+    <class>com.entidades.TblUsuariosRoles</class>
+    <class>com.entidades.TblParam</class>
+    <properties>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>

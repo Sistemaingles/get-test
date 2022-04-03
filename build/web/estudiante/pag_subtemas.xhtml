@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" 
+        >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">Lessons</ui:define> 
+   
+    <ui:define name="content">
+        
+            <h:form>
+                
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                         <i class="fa fa-cogs">
+                         </i>
+                         LESSONS
+                     </div>
+                 </div>     
+                   
+                <div class="row">
+                        
+             
+                    <ui:repeat var="subtema" value="#{subtemaMB.subtema}">
+                        
+                        <div class="col-lg-3 col-xs-6">
+                            <div class="#{subtema.subtemaClase}">
+                           <div class="inner">
+                               <h2></h2>
+
+                               <p>#{subtema.subtemaDesc}</p>
+                           </div>
+                           <div class="icon">
+                               <i class="#{subtema.subtemaIcono}"></i> 
+                           </div>
+                         
+                            <!--<a href="{request.contextPath}/estudiante/pag_presentataller.jsf?SubtemaId={subtema.subtemaId}" class="small-box-footer">View Activities <i class="fa fa-arrow-circle-right"></i></a>-->
+                            <div class="small-box-footer">
+                                <p:commandLink id="btnVerActividad"  style="font-size: 22px; color: #ffffff;" action="#{subtemaMB.ver_Actividad(subtema.subtemaId)}"  >
+                                         <h:outputText value="View Activities  "/><i class="fa fa-arrow-circle-right"></i>
+                                </p:commandLink>
+                            </div>
+                              
+                         </div>
+                        </div>
+                    
+                    </ui:repeat>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-xs-6">
+                        <div class="small-box bg-red-active">
+                         
+                         
+                            <!--<a href="{request.contextPath}/estudiante/pag_unidades.jsf?DestrezaId={subtemaMB.destreza_Id}" class="small-box-footer">Return <i class="fa fa-arrow-circle-right"></i></a>-->
+                            <p:commandLink id="btnRegresar"  style="font-size: 22px; color: #ffffff;" action="#{subtemaMB.Regresar()}"  >
+                                <h:outputText value="Regresar  "/><i class="fa fa-arrow-circle-right"></i>
+                            </p:commandLink>
+                            
+                             
+                         </div>
+                    </div>
+                </div>
+                
+               
+            </h:form>
+  
+     </ui:define>
+    
+</ui:composition>
+</html>

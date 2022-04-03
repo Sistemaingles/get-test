@@ -1,0 +1,93 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">REPORTE ESTUDIANTE POR CURSO</ui:define> 
+   
+    <ui:define name="content">
+        
+        <h:form id="Formulario">
+            <p:panel header="Búsqueda de Estudiante por Cursos" >
+                <p:panelGrid style="width:100%">
+                    <p:row>
+                        <p:column style="width:10%">
+                            <p:outputLabel value="CURSO (*) :"/>
+                        </p:column>
+                        <p:column style="width:30%">
+                            <p:selectOneMenu id="curso" value="#{asignaEstudianteMB.curso_cod}" >     
+                                <f:selectItem itemLabel="(TODOS)" itemValue="#{0}" />
+                                <f:selectItems value="#{asignaEstudianteMB.cursoList}" var="curso" itemLabel="#{curso.cursoNumero}" itemValue="#{curso.cursoId}" />
+                            </p:selectOneMenu>
+                            <p:message for="curso" />
+                        </p:column>
+                        
+                        <p:column style="width:10%">
+                            <p:commandButton value="BUSCAR" icon="ui-icon-check" actionListener="#{asignaEstudianteMB.buscaPeriodoLectivos()}" update="estudianteDT" validateClient="true" />
+                        </p:column>
+                         <p:column style="width:10%">
+                         <p:commandButton id="btn_imprimir" value = "IMPRIMIR"   actionListener="#{asignaEstudianteMB.generarReporte()}"  icon="ui-icon-print" ajax="false" />
+                          </p:column>
+                        
+                    </p:row>  
+                      
+                </p:panelGrid>
+            </p:panel>
+            
+            <p:panel header="DETALLE DE ESTUDIANTE POR CURSOS">
+                 <p:layout  style="min-width:400px;min-height:350px;">
+                
+                <p:layoutUnit position="west" resizable="false" size="700" minSize="700" maxSize="1000">
+                
+                <p:dataTable 
+                    id="estudianteDT" 
+                    value="#{asignaEstudianteMB.detperiodoList}" 
+                    var="estudianteL" 
+                    emptyMessage="No existen Estudiante por cursos registrados"
+                    paginator="true" rows="10" rowsPerPageTemplate="10,20,30,40" 
+                    style="width:100%;" 
+                    editable="false" 
+                    >
+                    
+               <!--     <p:column headerText="ID_ESTUDIANTE" style="text-align: center; width: 70px">
+                        <h:outputText value="#{estudianteL.persona_cod}" />
+                    </p:column> -->
+                    
+                    <p:column headerText="NOMBRES Y APELLIDOS" style="text-align: center; width: 200px">
+                        <h:outputText value="#{estudianteL.persona_apeNom}" />
+                    </p:column> 
+
+                    <p:column headerText="CURSO" style="text-align: center; width: 150px">
+                        <h:outputText value="#{estudianteL.curso_descripcion}" />
+                    </p:column>
+                    
+                    <p:column headerText="PARALELO" style="text-align: center; width: 150px">
+                        <h:outputText value="#{estudianteL.paralelo_nombre}" />
+                    </p:column>
+              
+                    <p:column headerText="ESTADO" style="text-align: center; width:120px">
+                        <h:outputText value="#{estudianteL.estado}"/>
+                    </p:column> 
+                
+                </p:dataTable>
+                       </p:layoutUnit>
+                
+           <p:layoutUnit position="center" resizable="false" size="200" minSize="100" maxSize="200" >
+                    <p:panelGrid  columns="2" rendered="#{not empty asignaEstudianteMB.url}" columnClasses="label,value">
+                        <p:media  value="#{verArchivosMB.reporte}" style="min-width:1000px;min-height:300px;"  width="350" height="650" cache="false" player="pdf" >
+                        </p:media>
+                    </p:panelGrid>
+                </p:layoutUnit>
+            </p:layout>         
+            </p:panel>    
+           
+        </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>
+

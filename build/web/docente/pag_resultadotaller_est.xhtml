@@ -1,0 +1,101 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">RESULTADOS TALLERES</ui:define> 
+   
+    <ui:define name="content">
+        
+    <h:form id="formTaller">
+
+        <p:panel header="RESULTADOS TALLERES" >
+
+                <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+
+                <p:layout  style="min-width:400px;min-height:150px;">
+                   <p:layoutUnit position="west" resizable="true" size="700" minSize="700" maxSize="1000">
+                       <p:panelGrid style="width:100%">
+
+                        
+                        <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="CURSO - UNIDAD (*) :"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                            <p:selectOneMenu id="unidad" value="#{resultTallerEstMB.unidad_id}" >
+                                <f:selectItem itemLabel="Escoja una Unidad" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{resultTallerEstMB.unidadList}" var="unidad" itemLabel="#{unidad.curso_nombre} #{unidad.paralelo_nombre} : #{unidad.nombres}" itemValue="#{unidad.unidad_id}" />
+                            </p:selectOneMenu>
+                          </p:column>
+                        </p:row> 
+                           
+                       </p:panelGrid>
+
+
+                   </p:layoutUnit>
+
+                   <p:layoutUnit position="center" resizable="true" size="200" minSize="100" maxSize="200" >
+
+                       <h:panelGrid id="botones" columns="1" >
+                          <br/> 
+                          <p:commandButton value="CONSULTAR" icon="ui-icon-check"  update="tallerDT" actionListener="#{resultTallerEstMB.buscaResultadoTaller()}" validateClient="true"/>    
+                          <br/>    
+                       </h:panelGrid>
+
+                   </p:layoutUnit>
+               </p:layout>
+
+
+            </p:panel>    
+        
+        <p:panel header="DETALLE DE RESULTADOS DE TALLERES">
+            <p:dataTable 
+                id="tallerDT" 
+                value="#{resultTallerEstMB.resultadoList}" 
+                var="resultado" 
+                emptyMessage="No existen resultados de Talleres."
+                paginator="true" rows="5" rowsPerPageTemplate="10,20,30,40" 
+                style="width:100%;" 
+                editable="true" 
+                filteredValue=""
+                widgetVar="resultadoTable">
+             
+          
+          <!--     <p:column headerText="Id" style="text-align: center; width: 70px; ">
+                    <h:outputText value="#{resultado.resultadoId}" />
+                </p:column> -->
+                
+                <p:column headerText="Estudiante" style="text-align: center; width: 150px;"
+                          filterBy="#{resultado.estudiante}" filterMatchMode="contains">
+                    <h:outputText value="#{resultado.estudiante} " />
+                </p:column>
+                
+                 <p:column headerText="Curso" style="text-align: center; width: 100px;">
+                     <h:outputText value="#{resultado.curso} " />
+                </p:column>
+                
+                <p:column headerText="Unidad" style="text-align: center; width: 150px;">
+                    <h:outputText value="#{resultado.unidad_nombre} " />
+                </p:column>
+                
+                <p:column headerText="Porcentaje" style="text-align: center; width: 70px;">
+                    <h:outputText value="#{resultado.resultadoPorcentaje}" />
+                </p:column>
+                
+
+                <p:column headerText="Estado" style="text-align: center; width: 100px;">
+                    <h:outputText value="#{resultado.resultadoEstado}" />
+                </p:column>
+            </p:dataTable>
+        </p:panel>
+        
+    </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>

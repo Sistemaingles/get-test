@@ -1,0 +1,148 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">REGISTRA SUBTEMA</ui:define> 
+   
+    <ui:define name="content">
+        
+        <h:form id="Formulario2">
+         
+            <p:panel header="REGISTRA SUBTEMA" >
+            
+            <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+            
+            <p:layout style="min-width:400px;min-height:150px;">
+               <p:layoutUnit position="west" resizable="false" size="600" minSize="150" maxSize="600">
+                   <p:panelGrid style="min-height:150px;">
+               
+                        <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="UNIDAD:"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                            <p:selectOneMenu id="unidad" value="#{regSubtemaMB.unidad_id}" >
+                                <f:selectItem itemLabel="Escoja una Unidad" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{regSubtemaMB.unidadList}" var="unidad" itemLabel="#{unidad.nombres}" itemValue="#{unidad.unidad_id}" />
+                            </p:selectOneMenu>
+                          </p:column>
+                        </p:row> 
+                       
+                        <p:row>
+                          <p:column style="width:25%">
+                            <p:outputLabel value="SUBTEMA:"/>
+                          </p:column>
+                          <p:column style="width:60%">
+                              <p:inputText id="descripcion"  placeholder="INGRESE SUBTEMA" 
+                                     validatorMessage="Es obligatorio llenar campo SUBTEMA"
+                                     value="#{regSubtemaMB.descripcion}"
+                                     size="60" maxlength="200"
+                                     autocomplete="off"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     >
+                                <p:keyFilter regEx="/[a-z0-9_ñ\s]/i" />
+                            </p:inputText>
+                          </p:column>
+                       </p:row> 
+                    
+                 
+                   </p:panelGrid>
+                 
+                   
+               </p:layoutUnit>
+
+               <p:layoutUnit position="center" resizable="true" size="200" minSize="100" maxSize="200" >
+                   
+                   <h:panelGrid id="botones" columns="1" >
+                   
+                      <br/> 
+                      <p:commandButton value="CONSULTAR" icon="ui-icon-check"  update="subtemaDT" actionListener="#{regSubtemaMB.buscaSubtema()}" validateClient="true"/>    
+                      <br/>    
+                      <p:commandButton value="GUARDAR" icon="ui-icon-disk"  update="Formulario2,growl" actionListener="#{regSubtemaMB.ingresaSubtema()}" validateClient="true"/>
+                      <br/>
+                      <p:commandButton value="NUEVO" icon="ui-icon-refresh" actionListener="#{regSubtemaMB.reestableceSubtema()}" update="Formulario2,growl" validateClient="true" />
+  
+                   </h:panelGrid>
+                   
+               </p:layoutUnit>
+           </p:layout>
+            
+            
+  
+          
+        </p:panel>    
+       
+        <p:panel header="DETALLE DE SUBTEMA">
+            <p:dataTable 
+                id="subtemaDT" 
+                value="#{regSubtemaMB.subtemaList}" 
+                var="subtemaL" 
+                emptyMessage="No existen Subtemas registrados"
+                paginator="true" rows="10" rowsPerPageTemplate="10,20,30,40" 
+                style="width:100%;" 
+                editable="true" 
+                filteredValue=""
+                widgetVar="subtemaTable">
+                
+                <p:ajax event="rowEdit" listener="#{regSubtemaMB.actualizar}" update=":Formulario2:growl"/>
+                <p:ajax event="rowEditCancel" listener="#{regSubtemaMB.cancelar}" update=":Formulario2:growl"/>
+                
+                <p:column headerText="Editar" style="width:70px;text-align:center;">
+                        <p:rowEditor/>
+                </p:column>
+                
+           <!--     <p:column headerText="Id" style="text-align: center; width: 60px">
+                    <h:outputText value="#{subtemaL.subtemaId} " />
+                </p:column>  -->
+                
+                <p:column headerText="Unidad" style="text-align: center; width: 120px"
+                          filterBy="#{subtemaL.unidadId.unidadNombre}" filterMatchMode="contains">
+                    <h:outputText value="#{subtemaL.unidadId.unidadNombre} " />
+                </p:column>
+                
+   
+                <p:column headerText="Subtema" style="text-align: center; width:150px; color: black"
+                          filterBy="#{subtemaL.subtemaDesc}" filterMatchMode="contains">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{subtemaL.subtemaDesc}"/></f:facet>
+                            <f:facet name="input"> 
+                                <p:inputText id="descripcion"  placeholder="INGRESE SUBTEMA" 
+                                        validatorMessage="Es obligatorio llenar campo SUBTEMA"
+                                        value="#{subtemaL.subtemaDesc}"
+                                        size="60" maxlength="200"
+                                        required="true"
+                                        requiredMessage="Es obligatorio llenar campo SUBTEMA"
+                                        >
+                                   <p:keyFilter regEx="/[a-z0-9_ñ\s]/i" />
+                               </p:inputText>
+                            </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+
+                <p:column headerText="Estado" style="text-align: center; width:70px; color: black">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{subtemaL.subtemaSts}"/></f:facet>
+                            <f:facet name="input"> 
+                                <p:selectOneMenu id="genero" value="#{subtemaL.subtemaSts}" >
+                                    <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                                    <f:selectItem itemLabel="INACTIVO" itemValue="I" />     
+                                </p:selectOneMenu>
+                            </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+            </p:dataTable>
+        </p:panel>    
+            
+            
+        </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>
+

@@ -1,0 +1,180 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">PARALELOS</ui:define> 
+   
+    <ui:define name="content">
+        
+        <h:form id="Formulario">
+         
+            <p:panel header="Registro Paralelo" >
+            
+            <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+            
+            <p:layout style="min-width:400px;min-height:100px;">
+               <p:layoutUnit position="west" resizable="true" size="600" minSize="300" maxSize="600">
+                   
+                   <p:panelGrid style="width:100%">
+                    <p:row>
+                        <p:column style="width:10%">  
+                            <h:outputLabel for="numero" value="PARALELO:" style="font-weight:bold"/>
+                        </p:column>
+                        <p:column style="width:10%">
+                            <p:inputText id="numero" placeholder="Ingrese Paralelo" 
+                                     value="#{paraleloMB.paralelo_num}"
+                                     size="40" maxlength="1"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     autocomplete="off">
+                                <!--<f:validateLength minimum="1"/>-->
+                                <p:keyFilter regEx="/[A-Z_ñ\s]/i"/>
+                            </p:inputText> 
+                            <p:message for="numero" display="icon"/>  
+                        </p:column> 
+                    </p:row>
+                    
+                    <p:row>
+                        <p:column style="width:10%"> 
+                            <h:outputLabel for="descripcion" value="DESCRIPCIÓN:" style="font-weight:bold"/>
+                        </p:column> 
+                        <p:column style="width:10%"> 
+                            <p:inputText id="descripcion" placeholder="Ingrese descripción del Paralelo" 
+                                     value="#{paraleloMB.paralelo_descripcion}"
+                                     size="40" maxlength="50"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     autocomplete="off">
+                            <p:keyFilter regEx="/[a-z_ñ\s]/i" />
+                            </p:inputText>
+                           <p:message for="descripcion" display="icon"/>  
+                          
+                         </p:column>    
+                     </p:row>
+                    </p:panelGrid>
+                   
+               </p:layoutUnit>
+
+               <p:layoutUnit position="center" resizable="true" size="100" minSize="100" maxSize="200" >
+                   
+                   <h:panelGrid id="botones" columns="1" >
+                       <!--
+                      <br/> 
+                      <p:commandButton value="CONSULTAR" icon="ui-icon-check" actionListener="{paraleloMB.buscaParalelos()}" update="paraleloDT" validateClient="true"/> -->   
+                      <br/>   
+                      <p:commandButton value="NUEVO" icon="ui-icon-refresh" actionListener="#{paraleloMB.resstableParalelo()}" update="Formulario,growl" validateClient="true" />
+                      <br/>
+                      <p:commandButton value="GUARDAR" icon="ui-icon-disk" actionListener="#{paraleloMB.ingresaParalelo()}" update="Formulario,growl" validateClient="true"/>
+                      
+                      
+                   </h:panelGrid>
+                   
+               </p:layoutUnit>
+           </p:layout>
+            
+ 
+        </p:panel>    
+       
+        <p:panel header="DETALLE DE PARALELOS">
+            <p:dataTable 
+                id="paraleloDT" 
+                value="#{paraleloMB.paraleloList}" 
+                var="paraleloL" 
+                emptyMessage="No existen Paralelos registrados"
+                paginator="true" rows="10" rowsPerPageTemplate="10,20,30,20" 
+                style="width:100%;" 
+                editable="true" 
+                widgetVar="paraleloTable"
+                >
+                
+                <p:ajax event="rowEdit" listener="#{paraleloMB.actualizar}" update=":Formulario:growl"/>
+                <p:ajax event="rowEditCancel" listener="#{paraleloMB.cancelar()}" update=":Formulario:growl"/>
+                
+                <p:column headerText="Editar" style="width:70px;text-align:center;">
+                    <p:rowEditor/>
+                </p:column>
+                
+                <p:column headerText="Eliminar" style="width:70px;text-align:center;">
+                    <p:commandButton process="paraleloDT" icon="ui-icon-trash" actionListener="#{paraleloMB.eliminar(paraleloL)}" update=":Formulario:paraleloDT">
+                        <p:confirm header="Confirmación" message="Está seguro de eliminar el Paralelo?" icon="ui-icon-alert" />
+                    </p:commandButton>
+                    <p:confirmDialog  id="editDlg" global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"  />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog>  
+                </p:column>
+                
+                <f:facet name="header" class="align:left;">
+                    <p:outputPanel>
+                        <h:outputText value="Busqueda en campos filtrados:  " />
+                        <p:inputText id="globalFilter" onkeyup="PF('paraleloTable').filter()" style="width:150px" placeholder="Ingrese palabra"/>
+                    </p:outputPanel>
+                </f:facet>
+                
+ <!--               <p:column headerText="Id" style="text-align: center; width: 100px">
+                    <h:outputText value="#{paraleloL.paraleloId}" />
+                </p:column> -->
+                
+                <p:column headerText="Paralelo" style="text-align: center; width:120px"
+                          filterBy="#{paraleloL.paraleloNum}" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{paraleloL.paraleloNum}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText id="paralelo2" placeholder="Ingrese Paralelo" 
+                                     value="#{paraleloL.paraleloNum}"
+                                     size="40" maxlength="1"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase; color: black"
+                                     required="true"
+                                     requiredMessage="Es obligatorio llenar campo PARALELO">
+                                <f:validateLength minimum="1"/> 
+                                <p:keyFilter regEx="/[A-Z_ñ\s]/i"/>
+                            </p:inputText>
+                            
+                            </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+                <p:column headerText="Descripción" style="text-align: center; width:150px"
+                          filterBy="#{paraleloL.paraleloNombre}" filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{paraleloL.paraleloNombre}"/></f:facet>
+                        <f:facet name="input">
+                            <!--<h:inputText id="descripci" value="{paraleloL.paraleloNombre}" size="100"  style="color: black"  />-->
+                            <p:inputText id="descripci" placeholder="Ingrese descripción del Paralelo" 
+                                     validatorMessage="Descripción: Ingresar solo Caracteres"
+                                     value="#{paraleloL.paraleloNombre}"
+                                     size="40" maxlength="50"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase; color: black"
+                                     required="true"
+                                     requiredMessage="Es obligatorio llenar campo DESCRIPCIÓN">
+                                <p:keyFilter regEx="/[a-z_ñ\s]/i" />
+                            </p:inputText>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+                <p:column headerText="Estado" style="text-align: center; width:120px">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{paraleloL.paraleltoSts}"/></f:facet>
+                        <f:facet name="input"> 
+                            <p:selectOneMenu id="genero" value="#{paraleloL.paraleltoSts}" >
+                                <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                                <f:selectItem itemLabel="INACTIVO" itemValue="I" />     
+                            </p:selectOneMenu>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+            </p:dataTable>
+        </p:panel>    
+            
+            
+        </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>

@@ -1,0 +1,458 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" 
+        xmlns:c="http://java.sun.com/jsp/jstl/core">
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">REGISTRA ACTIVIDAD</ui:define> 
+   
+    <ui:define name="content">
+        
+        <h:form id="Formulario2" enctype="multipart/form-data">
+         
+            <p:panel header="REGISTRA ACTIVIDAD" >
+            
+            <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+            
+            <p:layout style="min-width:400px;min-height:500px;">
+               <p:layoutUnit position="west" resizable="true" size="700" minSize="700" maxSize="1000">
+                   <p:panelGrid style="width:100%">
+               
+                       <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="DESTREZA (*) :"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                            <p:selectOneMenu id="destreza" value="#{actividadCursoMB.destreza_id}" >     
+                                <f:selectItem itemLabel="Escoja una Destreza" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{actividadCursoMB.destrezaList}" var="destreza" itemLabel="#{destreza.destrezaNombre}" itemValue="#{destreza.destrezaId}" />
+                            </p:selectOneMenu>
+                          </p:column>
+                       </p:row> 
+                       
+                       <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="CURSO - UNIDAD (*) :"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                            <p:selectOneMenu id="unidad" value="#{actividadCursoMB.unidad_id}" >
+                                <p:ajax listener="#{actividadCursoMB.onUnidadChange()}" update="cbosubtema" />
+                                <f:selectItem itemLabel="Escoja una Unidad" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{actividadCursoMB.unidadList}" var="unidad" itemLabel="#{unidad.curso_nombre} #{unidad.paralelo_nombre} : #{unidad.nombres}" itemValue="#{unidad.unidad_id}" />
+                            </p:selectOneMenu>
+                          </p:column>
+                       </p:row> 
+                       
+                       <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="SUBTEMA (*) :"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                              <p:selectOneMenu id="cbosubtema" value="#{actividadCursoMB.subtema_id}" >     
+                                <f:selectItem itemLabel="Escoja un SubTema" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{actividadCursoMB.subtemaList}" var="subtema" itemLabel="#{subtema.subtemaDesc}" itemValue="#{subtema.subtemaId}" />
+                            </p:selectOneMenu>
+                          </p:column>
+                       </p:row> 
+                        <p:row>
+                           <p:column style="width:20%">
+                                <p:outputLabel value="ACTIVIDAD (*) :"/>
+                           </p:column>
+                           <p:column style="width:50%;">
+                               <p:editor id="actividad" widgetVar="editor" value="#{actividadCursoMB.actividad}" />
+                            </p:column>
+                        </p:row>
+                       <!--<p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="ACTIVIDAD (*) :"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                            <p:inputText id="actividad"  
+                                     value="{actividadCursoMB.actividad}"
+                                     size="60" maxlength="500">
+                                
+                            </p:inputText>
+                          </p:column>
+                       </p:row> -->
+                         <!--<p:keyFilter regEx="/[a-z0-9.,_ñ\s]/i" />-->
+                        <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="PREGUNTA (*) :"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                              <p:inputText id="pregunta" 
+                                     value="#{actividadCursoMB.pregunta}"
+                                     size="60" maxlength="500"
+                                     autocomplete="off">
+                                <!--<p:keyFilter regEx="/[a-z0-9/?_ñ,.\s]/i" />-->
+                            </p:inputText>
+                          </p:column>
+                            
+                       </p:row> 
+                        
+                       <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="TIPO RESPUESTA (*) :"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                            
+                            <!--<p:selectOneRadio id="tipoPregunta" value="{actividadCursoMB.tipoActividadPreg}" >
+                                <f:selectItem itemLabel="Opción Unica" itemValue="U" />
+                                <p:spacer width="100" height="10" />
+                                <f:selectItem itemLabel="Opción Multiple" itemValue="M" />
+                                <p:spacer width="100" height="10" />
+                                <f:selectItem itemLabel="Respuesta Corta" itemValue="R" />
+                                <p:spacer width="100" height="10" />
+                                <f:selectItem itemLabel="Ordenar" itemValue="O" />
+                            </p:selectOneRadio>-->
+                            
+                            <p:selectOneMenu id="tipoRespuesta" value="#{actividadCursoMB.tipoActividadPreg}" style="width:40px">
+                                <f:selectItem itemLabel="Seleccione un Tipo" itemValue="" />
+                                <f:selectItem itemLabel="ListBox" itemValue="L" />
+                                <f:selectItem itemLabel="Opción Única" itemValue="U" />
+                                <f:selectItem itemLabel="Opción Multiple" itemValue="M"/>
+                                <f:selectItem itemLabel="Ingresar Respuesta - seleccionar y arrastrar" itemValue="R" />
+                                <!--<f:selectItem itemLabel="Ordenar" itemValue="O" />-->
+                            </p:selectOneMenu>
+                              
+                          </p:column>
+                       </p:row> 
+                        
+                        <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="RESPUESTA (*) :"/>
+                          </p:column>
+                            <p:column style="width:50%">
+                                <p:inputText value="#{actividadCursoMB.objRespuesta.respuestaDesc}" size="60" maxlength="500" autocomplete="off"/>
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column style="width:20%">
+                                <p:outputLabel value="CALIFICACIÓN (*) :"/>
+                            </p:column>
+                            <p:column style="width:50%">
+                                <!--<p:inputText value="{actividadCursoMB.objRespuesta.respuestaCalif}"/>-->
+                                
+                                <p:selectOneMenu id="calificacion" value="#{actividadCursoMB.objRespuesta.respuestaCalif}" style="width:40px">
+                                    <f:selectItem itemLabel="Ninguna" itemValue="0" />
+                                    <f:selectItem itemLabel="100%" itemValue="100" />
+                                    <f:selectItem itemLabel="50%" itemValue="50" />
+                                    <f:selectItem itemLabel="33.33%" itemValue="33" />
+                                    <f:selectItem itemLabel="25%" itemValue="25" />
+                                    <f:selectItem itemLabel="20%" itemValue="20" />
+                                    <f:selectItem itemLabel="0%" itemValue="0" />
+                                </p:selectOneMenu>
+        
+                            </p:column>
+                        </p:row>
+                        
+             
+                        <p:row>
+                            <p:column style="width:20%">
+                                <p:outputLabel value="ORDEN (*) :"/>
+                            </p:column>
+                            <p:column style="width:50%">
+                                <!--<p:inputText value="{actividadCursoMB.objRespuesta.respuestaOrden}">
+                                    <p:keyFilter regEx="/[0-9]" />
+                                </p:inputText>-->
+                                 <p:selectOneMenu id="orden" value="#{actividadCursoMB.objRespuesta.respuestaOrden}" style="width:40px">
+                                     <f:selectItem itemLabel="Seleccione un Orden" itemValue="0" noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="1" itemValue="1" />
+                                    <f:selectItem itemLabel="2" itemValue="2" />
+                                    <f:selectItem itemLabel="3" itemValue="3" />
+                                    <f:selectItem itemLabel="4" itemValue="4" />
+                                    <f:selectItem itemLabel="5" itemValue="5" />
+                                    <f:selectItem itemLabel="6" itemValue="6" />
+                                    <f:selectItem itemLabel="7" itemValue="7" />
+                                    <f:selectItem itemLabel="8" itemValue="8" />
+                                    <f:selectItem itemLabel="9" itemValue="9" />
+                                    <f:selectItem itemLabel="10" itemValue="10" />
+                                </p:selectOneMenu>
+                            </p:column>
+                        </p:row>
+                         
+                         
+                         
+                  
+                        <p:row>
+                            <p:column style="width:20%">
+                                <p:outputLabel value="ES CORRECTA (*) :"/>
+                            </p:column>
+                            <p:column style="width:50%">
+                                <p:selectOneMenu id="correcta" value="#{actividadCursoMB.objRespuesta.respuestaCorrecta}" style="width:40px">
+                                    <!--<f:selectItem itemLabel="Seleccione" itemValue="null" />-->
+                                    <f:selectItem itemLabel="SI" itemValue="S" />
+                                    <f:selectItem itemLabel="NO" itemValue="N" />
+                                </p:selectOneMenu>
+                            </p:column>
+                        </p:row>
+                       
+                        <p:row>
+                            <p:column style="width:20%">
+                                <p:outputLabel value=""/>
+                            </p:column>
+                            <p:column style="width:50%">
+                                <p:commandButton value="Agregar" process="@form" actionListener="#{actividadCursoMB.btnAgregarRespuesta()}" update="tblRespuestas" />
+                            </p:column>
+                        </p:row>
+                        
+                       <p:row>
+                            <p:column style="width:20%">
+                                <p:outputLabel value=""/>
+                            </p:column>
+                            <p:column style="width:50%">
+                                <p:dataTable id="tblRespuestas" value="#{actividadCursoMB.listRespuestaAgregadas}" var="resp" emptyMessage="No existen Respuestas registradas" >
+                                   <p:column headerText="Respuesta" style="width:50%">
+                                       <h:outputText value="#{resp.respuestaDesc}" />
+                                   </p:column>
+                                    <p:column headerText="Calificación" style="width:20%">
+                                        <h:outputText value="#{resp.respuestaCalif}" />
+                                   </p:column>
+                                   <p:column headerText="Orden" style="width:15%">
+                                        <h:outputText value="#{resp.respuestaOrden}" />
+                                   </p:column>
+                                   <p:column headerText="Correcta" style="width:15%">
+                                       <h:outputText value="#{resp.respuestaCorrecta}" />
+                                   </p:column>
+                                </p:dataTable>
+                            </p:column>
+                        </p:row>
+                       
+                       <!--<p:row>
+                          <p:column style="width:15%">
+                            <p:outputLabel value="RESPUESTA (*) :"/>
+                          </p:column>
+                          <p:column style="width:40%">
+                            <p:inputText id="opcion1" placeholder="opcion 1" 
+                                     validatorMessage="Opcion Ingresar solo Caracteres"
+                                     value="{actividadCursoMB.respuesta1}"
+                                     size="40" maxlength="500">
+                                <p:keyFilter regEx="/[a-z_0-9?ñ.,\s]/i" />
+                            </p:inputText>
+                          </p:column>  
+                        </p:row>
+                        
+                       <p:row>
+                          <p:column style="width:15%">
+                            <p:outputLabel value=""/>
+                          </p:column>
+                          <p:column style="width:40%">
+                              <p:inputText id="opcion2" placeholder="opcion 2" 
+                                     validatorMessage="Opcion Ingresar solo Caracteres"
+                                     value="{actividadCursoMB.respuesta2}"
+                                     size="40" maxlength="500">
+                                <p:keyFilter regEx="/[a-z_0-9?ñ.,\s]/i" />
+                            </p:inputText>
+                          </p:column>
+                        </p:row>
+                        
+                       <p:row>
+                          <p:column style="width:15%">
+                            <p:outputLabel value=""/>
+                          </p:column>
+                          <p:column style="width:40%">
+                              <p:inputText id="opcion3" placeholder="opcion 3" 
+                                     validatorMessage="Opcion Ingresar solo Caracteres"
+                                     value="{actividadCursoMB.respuesta3}"
+                                     size="40" maxlength="500">
+                                <p:keyFilter regEx="/[a-z_0-9?ñ.,\s]/i" />
+                            </p:inputText>
+                          </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                          <p:column style="width:15%">
+                            <p:outputLabel value=""/>
+                          </p:column>
+                          <p:column style="width:40%">
+                              <p:inputText id="opcion4" placeholder="opcion 4" 
+                                     validatorMessage="Opcion Ingresar solo Caracteres"
+                                     value="{actividadCursoMB.respuesta4}"
+                                     size="40" maxlength="500">
+                                <p:keyFilter regEx="/[a-z_0-9?ñ.,\s]/i" />
+                            </p:inputText>
+                          </p:column>
+                        </p:row>
+                        
+                       <p:row>
+                          <p:column style="width:15%">
+                            <p:outputLabel value="OPCIÓN CORRECTA (*)"/>
+                          </p:column>
+                          <p:column style="width:40%">
+                            <p:selectOneRadio id="console" value="{actividadCursoMB.correcta}" >
+                                <f:selectItem itemLabel="Opción 1" itemValue="1" />
+                                <p:spacer width="100" height="10" />
+                                <f:selectItem itemLabel="Opción 2" itemValue="2" />
+                                <p:spacer width="100" height="10" />
+                                <f:selectItem itemLabel="Opción 3" itemValue="3" />
+                                <p:spacer width="100" height="10" />
+                                <f:selectItem itemLabel="Opción 4" itemValue="4" />
+                            </p:selectOneRadio>
+                          </p:column>
+                        </p:row>-->
+                       
+                       <!--<p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="CURSO Y PARALELO (*) :"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                             
+                            <p:commandButton value="Ver Cursos" actionListener="{actividadCursoMB.showCursoParalelo}" process="@this"> 
+                                <p:ajax event="dialogReturn" listener="{actividadCursoMB.cursoParaleloSelecionado}" update="cursoparalelo_cod" />
+                                <p:resetInput target="cursoparalelo_cod"/>
+                            </p:commandButton>
+                            <p:inputText id="cursoparalelo_cod" value="{actividadCursoMB.selectedCurso.cursoparalelo_cod} - {actividadCursoMB.selectedCurso.curso_descripcion} - {actividadCursoMB.selectedCurso.paralelo_nombre}" readonly="true"
+                                 style="width: 300px"/>
+                          </p:column>
+                       </p:row>-->
+                        
+                       <p:row>
+                          <p:column style="width:20%">
+                            <p:outputLabel value="ARCHIVO"/>
+                          </p:column>
+                          <p:column style="width:30%">
+                     
+                              <!--<p:fileUpload id="filArchivo" value="Seleccionar" 
+                                                mode="single" skinSimple="true" 
+                                                fileUploadListener="{actividadCursoMB.subirArchivo(event)}"
+                                                sizeLimit="512000"  allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                                cancelLabel="Cancelar"
+                                                uploadLabel="Subir Archivo"
+                                                label="Elegir"
+                                                update="graimg"/>-->
+                              <p:fileUpload fileUploadListener="#{actividadCursoMB.subirArchivo}" mode="advanced" dragDropSupport="false"
+                                    update="growl" sizeLimit="5120000" fileLimit="10" allowTypes="/(\.|\/)(gif|jpe?g|png|m4a|mp4)$/" 
+                                    cancelLabel="Cancelar"
+                                    uploadLabel="Subir Archivo"
+                                    label="Elegir"/>
+ 
+                                <!--<p:graphicImage id="graimg" value="{actividadCursoMB.archivo}" width="150" height="120"/>-->
+                          </p:column>
+                        </p:row>
+                   </p:panelGrid>
+                 
+                   
+               </p:layoutUnit>
+
+               <p:layoutUnit position="center" resizable="true" size="200" minSize="100" maxSize="200" >
+                   
+                   <h:panelGrid id="botones" columns="1" >
+                       
+                      <p:commandButton value="CONSULTAR" icon="ui-icon-check"  update="actividad_cr" actionListener="#{actividadCursoMB.buscaActividadRegistrado()}"/>
+                      <br/>  
+                      <p:commandButton value="GUARDAR" icon="ui-icon-disk"  update="Formulario2,growl, actividad_cr" actionListener="#{actividadCursoMB.ingresaActividadCurso()}"  validateClient="true"/>
+                      <br/>
+                      <p:commandButton value="NUEVO" icon="ui-icon-refresh" actionListener="#{actividadCursoMB.reestableceActividad()}" update="Formulario2,growl" validateClient="true" />
+                       <br/> 
+                       <!--<p:commandButton value="EDITAR" icon="ui-icon-check"   actionListener="{actividadCursoMB.buscaActividadCursosAsignados()}" validateClient="true"/>    -->
+                   </h:panelGrid>
+                   
+               </p:layoutUnit>
+           </p:layout>
+            
+
+        </p:panel>    
+        
+            
+        <p:panel header="DETALLE DE ACTIVIDADES" >
+           
+            <p:carousel headerText="ACTIVITIES" value="#{actividadCursoMB.tallerList}" var="taller"  itemStyle="text-align:center" numVisible="1" 
+                        easing="easeOutBounce" style="width: 1050px;" circular="true" id="actividad_cr">
+        
+                <p:panelGrid columns="1" style="text-align: left; " layout="grid">
+
+                                <p:column>    
+                                    <p:spacer width="20" />
+                                    <h:outputText class="" value="SUBTEMA: #{taller.subtema}" escape = "false" style="text-align: left; width: 450px; font-size: 16px;" />                  
+                                </p:column>
+                                
+                                <p:column>    
+                                    <p:spacer width="20" />
+                                    <!--<h:outputText class="" value="{taller.actividad}" escape = "false" style="text-align: left; width: 450px; font-size: 16px;" />  -->                
+                                    <p:outputLabel value="#{taller.actividad}" escape="false" style="text-align: left; width: 450px; font-size: 16px;" />
+                                </p:column>
+                                
+                                <!--<h:outputText value="&lt;br/&gt;" escape="false" />-->
+                                
+                                <p:column>        
+                                    <p:spacer width="40" />
+                                    <h:outputText value="#{taller.pregunta}" escape = "false"  style="text-align: left; width: 450px; font-size: 14px;" />
+                                </p:column>
+                                
+                                <p:column>
+                                    <p:spacer width="100" />
+
+                                    <p:media value="/resources/actividades/#{taller.archivo}" player="quicktime"  width="100" height="100">
+                                        <f:param name="autoPlay" value="false" />
+                                        <f:param name="autostart" value="false" />
+                                    </p:media>  
+                                </p:column>
+                                
+                                    <!--preguntas tipo ListBox-->
+                                    <p:row rendered="#{'L' eq taller.tipo_pregunta}">
+                                        <p:column>
+                                            <p:selectOneListbox id="listbox" value="#{taller.idRespuestSelec}" style="width: 350px">
+                                                <f:selectItems value="#{taller.respuestas}"  var="respuestas" itemLabel="#{respuestas.descripcion}" itemValue="#{respuestas.id}" />
+                                            </p:selectOneListbox>
+                                            
+                                        </p:column>
+                                    </p:row>
+                                    
+                                    <!--preguntas tipo Opción Unica-->
+                                    <p:row rendered="#{'U' eq taller.tipo_pregunta}">
+                                        <p:column>
+                                            <p:selectOneRadio id="radio" value="#{taller.idRespuestSelec}" layout="grid" columns="1" styleClass="grid-radio">
+                                                <f:selectItems value="#{taller.respuestas}"  var="respuestas" itemLabel="#{respuestas.descripcion}" itemValue="#{respuestas.id}" />
+                                            </p:selectOneRadio>
+                                        </p:column>
+                                    </p:row>
+                                    
+                                    <!--preguntas tipo Opción Múltiple-->
+                                    <p:row rendered="#{'M' eq taller.tipo_pregunta}">
+                                        <p:selectBooleanCheckbox id="checkbox" value="#{taller.idRespuestSelec}" style="width: 350px">
+                                            <f:selectItems value="#{taller.respuestas}"  var="respuestas" itemLabel="#{respuestas.descripcion}" itemValue="#{respuestas.id}" />
+                                        </p:selectBooleanCheckbox>
+                                    </p:row>
+                                    
+                                    <!--preguntas tipo Ingresar Respuestas-->
+                                    <p:row rendered="#{'R' eq taller.tipo_pregunta}">
+                                        <ui:repeat var="respuestas" value="#{taller.respuestas}">
+                                            <p:column>
+                                                <p:spacer width="40" />
+                                                <h:outputText value="#{respuestas.orden}.-"  />
+                                                <p:spacer width="20" />
+                                                <p:inputText  value="#{respuestas.status}"  style="text-align: left; width: 450px; font-size: 14px;" autocomplete="off" />
+                                                <h:outputText value="&lt;br/&gt;" escape="false" />
+                                            </p:column>
+                                        </ui:repeat>
+                                    </p:row>
+                                    
+                    <f:facet name="footer" >
+                        <p:commandButton process="actividad_cr" icon="ui-icon-trash" actionListener="#{actividadCursoMB.eliminar(taller.actividad_id)}" >
+                            <p:confirm header="Confirmación" message="Está seguro de eliminar la Actividad?" icon="ui-icon-alert" />
+                        </p:commandButton>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+
+                    </f:facet>     
+                </p:panelGrid>
+            </p:carousel>
+            
+
+        </p:panel>  
+        
+
+        </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>
+

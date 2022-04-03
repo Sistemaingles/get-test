@@ -1,0 +1,196 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui" >
+    
+<ui:composition template="/template.xhtml">
+    
+    <ui:define name="pageAtual">REGISTRA UNIDAD</ui:define> 
+   
+    <ui:define name="content">
+        
+        <h:form id="Formulario2">
+         
+            <p:panel header="REGISTRA UNIDAD" >
+            
+            <p:messages id="growl" autoUpdate="true" closable="true" style="width: 60%;"/>
+            
+            <p:layout style="min-width:400px;min-height:150px;">
+               <p:layoutUnit position="west" resizable="false" size="600" minSize="150" maxSize="600">
+                   <p:panelGrid style="min-height:150px;">
+               
+                       <p:row>
+                          <p:column style="width:25%">
+                            <p:outputLabel value="UNIDAD:"/>
+                          </p:column>
+                          <p:column style="width:60%">
+                              <p:inputText id="Nombre"  placeholder="Ingrese UNIDAD" 
+                                     validatorMessage="Es obligatorio llenar campo UNIDAD"
+                                     value="#{unidadCursoMB.nombre}"
+                                     size="60" maxlength="30"
+                                     autocomplete="off"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     >
+                                <p:keyFilter regEx="/[a-z0-9_ñ\s]/i" /> 
+                            </p:inputText>
+                          </p:column>
+                       </p:row> 
+                       
+                        <p:row>
+                          <p:column style="width:25%">
+                            <p:outputLabel value="DESCRIPCIÓN:"/>
+                          </p:column>
+                          <p:column style="width:60%">
+                              <p:inputText id="descripcion"  placeholder="Ingrese DESCRIPCIÓN" 
+                                     validatorMessage="Es obligatorio llenar campo DESCRIPCIÓN"
+                                     value="#{unidadCursoMB.descripcion}"
+                                     size="60" maxlength="30"
+                                     autocomplete="off"
+                                     onblur="value=value.toUpperCase()" style="text-transform: uppercase"
+                                     >
+                                <p:keyFilter regEx="/[a-z0-9_ñ\s]/i" />
+                            </p:inputText>
+                          </p:column>
+                       </p:row> 
+                    
+                       <p:row>
+                          <p:column style="width:25%">
+                            <p:outputLabel value="CURSO Y PARALELO (*) :"/>
+                          </p:column>
+                          <p:column style="width:50%">
+                             
+                            <p:commandButton value="Ver Cursos" actionListener="#{unidadCursoMB.showCursoParalelo}" process="@this"> <!-- update="@none">-->
+                                <p:ajax event="dialogReturn" listener="#{unidadCursoMB.cursoParaleloSelecionado}" update="cursoparalelo_cod" />
+                                <p:resetInput target="cursoparalelo_cod"/>
+                            </p:commandButton>
+                            <p:inputText id="cursoparalelo_cod" value="#{unidadCursoMB.selectedCurso.cursoparalelo_cod} - #{unidadCursoMB.selectedCurso.curso_descripcion} - #{unidadCursoMB.selectedCurso.paralelo_nombre}" readonly="true"
+                                 style="width: 300px"/>
+
+
+                          </p:column>
+                       </p:row>
+                   </p:panelGrid>
+                 
+                   
+               </p:layoutUnit>
+
+               <p:layoutUnit position="center" resizable="true" size="200" minSize="100" maxSize="200" >
+                   
+                   <h:panelGrid id="botones" columns="1" >
+                   
+                      <br/> 
+                      <p:commandButton value="CONSULTAR" icon="ui-icon-check"  update="unidadDT" actionListener="#{unidadCursoMB.buscaUnidadCursosAsignados()}" validateClient="true"/>    
+                      <br/>    
+                      <p:commandButton value="GUARDAR" icon="ui-icon-disk"  update="Formulario2,growl" actionListener="#{unidadCursoMB.ingresaUnidadCurso()}" validateClient="true"/>
+                      <br/>
+                      <p:commandButton value="NUEVO" icon="ui-icon-refresh" actionListener="#{unidadCursoMB.resstableceUnidad()}" update="Formulario2,growl" validateClient="true" />
+  
+                   </h:panelGrid>
+                   
+               </p:layoutUnit>
+           </p:layout>
+            
+            
+  
+          
+        </p:panel>    
+       
+        <p:panel header="DETALLE DE UNIDADES">
+            <p:dataTable 
+                id="unidadDT" 
+                value="#{unidadCursoMB.unidadList}" 
+                var="unidadL" 
+                emptyMessage="No existen Unidades registradas"
+                paginator="true" rows="10" rowsPerPageTemplate="10,20,30,40" 
+                style="width:100%;" 
+                editable="true" 
+                filteredValue=""
+                widgetVar="unidadTable">
+                
+                <p:ajax event="rowEdit" listener="#{unidadCursoMB.actualizar}" update=":Formulario2:growl"/>
+                <p:ajax event="rowEditCancel" listener="#{unidadCursoMB.cancelar}" update=":Formulario2:growl"/>
+                
+                <p:column headerText="Editar" style="width:70px;text-align:center;">
+                        <p:rowEditor/>
+                </p:column>
+                
+             <!--   <p:column headerText="Id" style="text-align: center; width: 60px">
+                    <h:outputText value="#{unidadL.unidad_id} " />
+                </p:column> -->
+                
+                <p:column headerText="Periodo" style="text-align: center; width: 150px">
+                    <h:outputText value="#{unidadL.periodo} " />
+                </p:column>
+                
+                <p:column headerText="Unidad" style="text-align: center; width: 200px"
+                          filterBy="#{unidadL.nombres}" filterMatchMode="contains">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{unidadL.nombres}"/></f:facet>
+                            <f:facet name="input"> 
+                                <p:inputText id="nombrel" placeholder="INGRESE UNIDAD" 
+                                         validatorMessage="Es obligatorio llenar campo UNIDAD"
+                                         value="#{unidadL.nombres}"
+                                         size="60" maxlength="100"
+                                         required="true"
+                                         requiredMessage="Es obligatorio llenar campo UNIDAD"
+                                         style="color: black">
+                                    <f:validateLength minimum="1" /> 
+                                    <p:keyFilter regEx="/[A-Z_ñ0-9-,\s]/i"/>
+                                </p:inputText>
+                            </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+                <p:column headerText="Descripción" style="text-align: center; width:200px">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{unidadL.descripcion}"/></f:facet>
+                            <f:facet name="input"> 
+                                <p:inputText id="descripcionl" placeholder="INGRESE DESCRIPCIÓN" 
+                                         validatorMessage="Es obligatorio llenar campo DESCRIPCIÓN"
+                                         value="#{unidadL.descripcion}"
+                                         size="60" maxlength="200"
+                                         required="true"
+                                         requiredMessage="Es obligatorio llenar campo DESCRIPCIÓN"
+                                         style="color: black">
+                                    <f:validateLength minimum="1" /> 
+                                    <p:keyFilter regEx="/[A-Z_ñ0-9-,\s]/i"/>
+                                </p:inputText>
+                            </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+
+                
+                <p:column headerText="Curso" style="text-align: center; width: 100px">
+                    <h:outputText value="#{unidadL.curso_nombre}"  />
+                </p:column>
+                
+                <p:column headerText="Paralelo" style="text-align: center; width: 100px">
+                    <h:outputText value="#{unidadL.paralelo_nombre}" />
+                </p:column>
+                
+                <p:column headerText="Estado" style="text-align: center; width:100px">
+                        <p:cellEditor>
+                            <f:facet name="output"><h:outputText value="#{unidadL.estado}"/></f:facet>
+                            <f:facet name="input"> 
+                                <p:selectOneMenu id="genero" value="#{unidadL.estado}" >
+                                    <f:selectItem itemLabel="ACTIVO" itemValue="A" />
+                                    <f:selectItem itemLabel="INACTIVO" itemValue="I" />     
+                                </p:selectOneMenu>
+                            </f:facet>
+                    </p:cellEditor>
+                </p:column> 
+                
+                
+                
+            </p:dataTable>
+        </p:panel>    
+            
+            
+        </h:form>
+        
+     </ui:define>
+    
+</ui:composition>
+</html>
+
